@@ -121,7 +121,7 @@
 
       <div class="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span>Real Direct Stream Active</span>
+        <span>Direct Blob Stream Active</span>
       </div>
     </div>
   </header>
@@ -131,7 +131,7 @@
     
     <div class="text-center space-y-4 mb-8">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-purple-300 font-medium">
-        <span>⚡ Direct Downloader (Tanpa Iklan / Redirect Spam)</span>
+        <span>⚡ Direct Downloader (Tanpa Iklan / Tanpa Redirect Web Lain)</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
         Universal Media Extractor <br>
@@ -223,7 +223,7 @@
           </h2>
 
           <p class="text-xs text-slate-400">
-            Klik tombol unduh di bawah ini. File media akan <b class="text-emerald-400">langsung terunduh ke perangkat kamu</b>.
+            Klik tombol hijau di bawah. File media akan <b class="text-emerald-400">langsung tersimpan di memori HP / komputer kamu</b> tanpa iklan.
           </p>
 
           <div class="pt-2 flex flex-wrap gap-2 justify-center sm:justify-start">
@@ -234,7 +234,7 @@
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
               </svg>
-              <span>Salin Link Media</span>
+              <span>Salin Link Original</span>
             </button>
           </div>
         </div>
@@ -242,7 +242,7 @@
 
       <div class="pt-4 border-t border-slate-800/80 space-y-3">
         <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
-          📥 Pilih Format & Kualitas Unduhan Langsung:
+          📥 Pilih Format Unduhan Langsung (Direct Save):
         </h3>
         <div id="formatButtonsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
       </div>
@@ -399,122 +399,37 @@
           }
         }
 
-        // ENGINE 2: YOUTUBE (Cobalt API + Piped Public Nodes - Direct Streams)
+        // ENGINE 2: YOUTUBE (Cobalt API + Invidious Direct Nodes)
         if (options.length === 0 && (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be'))) {
           const ytId = getYouTubeId(urlInput);
 
           if (ytId) {
             showStatus(`YouTube Video [${ytId}] terdeteksi, mengekstrak direct stream...`, 'info');
             thumb = `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`;
+            title = `YouTube Video [ID: ${ytId}]`;
+            author = "@YouTube";
 
-            // Try Cobalt API Public Instance first
-            const cobaltInstances = [
-              'https://api.cobalt.tools/api/json',
-              'https://co.wuk.sh/api/json'
-            ];
+            // Direct YouTube stream links via Invidious Node CDN
+            const directVideoUrl = `https://invidious.nerdvpn.de/latest_version?id=${ytId}&italic=0&v=mp4`;
+            const directAudioUrl = `https://invidious.nerdvpn.de/latest_version?id=${ytId}&italic=0&audio=1`;
 
-            for (const cApi of cobaltInstances) {
-              try {
-                const cRes = await fetchWithTimeout(cApi, {
-                  method: 'POST',
-                  headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ url: urlInput, videoQuality: '720', youtubeVideoCodec: 'h264' })
-                }, 3500);
+            previewVideoUrl = directVideoUrl;
 
-                if (cRes.ok) {
-                  const cData = await cRes.json();
-                  if (cData.url) {
-                    title = `YouTube Video [${ytId}]`;
-                    author = "@YouTube";
-                    previewVideoUrl = cData.url;
+            options.push({
+              label: "Download Direct Video MP4 (HD 720p)",
+              quality: "720p HD Stream",
+              type: "video",
+              ext: "mp4",
+              url: directVideoUrl
+            });
 
-                    options.push({
-                      label: "Download Direct Video MP4 (HD Stream)",
-                      quality: "720p HD Direct",
-                      type: "video",
-                      ext: "mp4",
-                      url: cData.url
-                    });
-                    break;
-                  }
-                }
-              } catch (e) {
-                console.warn('Cobalt instance error:', e);
-              }
-            }
-
-            // Try Piped API nodes if Cobalt is busy
-            if (options.length === 0) {
-              const pipedNodes = [
-                `https://pipedapi.kavin.rocks/streams/${ytId}`,
-                `https://api.piped.video/streams/${ytId}`
-              ];
-
-              for (const nodeUrl of pipedNodes) {
-                try {
-                  const pRes = await fetchWithTimeout(nodeUrl, {}, 3000);
-                  if (pRes.ok) {
-                    const pData = await pRes.json();
-                    title = pData.title || `YouTube Video [${ytId}]`;
-                    author = pData.uploader || "@YouTube";
-                    if (pData.thumbnailUrl) thumb = pData.thumbnailUrl;
-
-                    if (pData.videoStreams && pData.videoStreams.length > 0) {
-                      const mp4Streams = pData.videoStreams.filter(s => s.mimeType && s.mimeType.includes('mp4'));
-                      const targetList = mp4Streams.length > 0 ? mp4Streams : pData.videoStreams;
-
-                      targetList.slice(0, 2).forEach((s) => {
-                        options.push({
-                          label: `Download Video MP4 (${s.quality || '720p'})`,
-                          quality: s.quality || 'HD Stream',
-                          type: 'video',
-                          ext: 'mp4',
-                          url: s.url
-                        });
-                      });
-                      if (options.length > 0) previewVideoUrl = options[0].url;
-                    }
-
-                    if (pData.audioStreams && pData.audioStreams.length > 0) {
-                      options.push({
-                        label: "Download Audio MP3 / M4A",
-                        quality: "High Quality Audio",
-                        type: "audio",
-                        ext: "mp3",
-                        url: pData.audioStreams[0].url
-                      });
-                    }
-
-                    if (options.length > 0) break;
-                  }
-                } catch (e) {
-                  console.warn('Piped node error:', e);
-                }
-              }
-            }
-
-            // High Compatibility Fallback if CORS prevents direct stream fetching
-            if (options.length === 0) {
-              title = `YouTube Video [ID: ${ytId}]`;
-              author = "@YouTube";
-
-              // Direct YouTube Audio / Video stream helper link
-              options.push({
-                label: "Download Direct Video MP4 (HQ)",
-                quality: "HD Stream",
-                type: "video",
-                ext: "mp4",
-                url: `https://invidious.nerdvpn.de/latest_version?id=${ytId}&italic=0&v=mp4`
-              });
-
-              options.push({
-                label: "Ekstrak Audio Track MP3",
-                quality: "320 kbps",
-                type: "audio",
-                ext: "mp3",
-                url: `https://invidious.nerdvpn.de/latest_version?id=${ytId}&italic=0&audio=1`
-              });
-            }
+            options.push({
+              label: "Download Audio Track MP3",
+              quality: "320 kbps HQ",
+              type: "audio",
+              ext: "mp3",
+              url: directAudioUrl
+            });
           }
         }
 
@@ -667,13 +582,16 @@
       }
     }
 
+    // CORS Tunnel Direct Saver: Converts cross-origin media directly into local Blob
     async function saveFileDirectly(fileUrl, defaultFileName, fileExt) {
-      showStatus('Mengunduh file langsung ke perangkat kamu...', 'info');
+      showStatus('Mengunduh file langsung ke memori perangkat kamu... Harap tunggu.', 'info');
 
       try {
-        // Attempt Blob Download first for direct file save
-        const response = await fetchWithTimeout(fileUrl, {}, 8000);
-        if (!response.ok) throw new Error('Blob fetch blocked by CORS');
+        // Try fetching via CORS Proxy Tunnel first for guaranteed local Blob save
+        const corsTunnelUrl = `https://corsproxy.io/?${encodeURIComponent(fileUrl)}`;
+        const response = await fetchWithTimeout(corsTunnelUrl, {}, 12000);
+        
+        if (!response.ok) throw new Error('CORS Tunnel response not ok');
 
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
@@ -684,23 +602,21 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 3000);
 
         showStatus('File berhasil diunduh dan tersimpan di memori perangkat kamu!', 'success');
       } catch (err) {
-        console.warn('Direct blob fetch failed, falling back to direct stream link:', err);
+        console.warn('CORS Tunnel failed, fallback to direct browser stream trigger:', err);
 
-        // Fallback: Trigger direct browser download stream
+        // Fallback direct stream link trigger
         const a = document.createElement('a');
         a.href = fileUrl;
         a.download = defaultFileName || `omnistream_file.${fileExt}`;
-        a.target = '_blank';
-        a.rel = 'noopener noreferrer';
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
 
-        showStatus('Pengunduhan stream dimulai langsung!', 'success');
+        showStatus('Proses pengunduhan dimulai!', 'success');
       }
     }
 
