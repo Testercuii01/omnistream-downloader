@@ -49,36 +49,28 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(192, 38, 211, 0.4);
         }
-        .pulse-loader {
-            animation: pulse 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .4; }
-        }
     </style>
 </head>
 <body class="flex flex-col justify-between p-4 md:p-8">
 
-    <!-- Header / Navbar -->
+    <!-- Header -->
     <header class="max-w-5xl mx-auto w-full flex items-center justify-between py-4 mb-8">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl btn-gradient flex items-center justify-center text-white font-bold text-xl shadow-lg">
                 <i class="fa-solid fa-bolt"></i>
             </div>
             <span class="text-2xl font-extrabold tracking-tight text-white">OmniStream</span>
-            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">PRO HYBRID v0.9</span>
+            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">v1.0 STABLE</span>
         </div>
         <div class="hidden sm:flex items-center gap-2 text-xs bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            Direct Client Engine Active
+            Cobalt Engine Active
         </div>
     </header>
 
     <!-- Main Content -->
     <main class="max-w-3xl mx-auto w-full flex-grow flex flex-col items-center justify-center my-auto">
         
-        <!-- Tagline -->
         <div class="text-center mb-8">
             <span class="inline-block text-xs font-semibold uppercase tracking-widest text-purple-400 bg-purple-950/50 border border-purple-800/50 px-3 py-1 rounded-full mb-3">
                 ⚡ Unduh Video, Musik & Foto Tanpa Iklan
@@ -87,11 +79,11 @@
                 Universal Media Downloader
             </h1>
             <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
-                Tempelkan link media publik dari TikTok, YouTube, Instagram, atau X/Twitter di bawah ini. File langsung terunduh secara instan!
+                Tempelkan link media dari TikTok, YouTube, Instagram, atau X/Twitter.
             </p>
         </div>
 
-        <!-- Input Card -->
+        <!-- Form Card -->
         <div class="w-full glass-panel rounded-3xl p-3 md:p-4 mb-6">
             <form id="downloadForm" onsubmit="handleExtract(event)" class="flex flex-col md:flex-row gap-3">
                 <div class="glass-input rounded-2xl flex items-center px-4 py-3 flex-grow gap-3">
@@ -101,7 +93,6 @@
                         id="mediaUrl" 
                         placeholder="Paste link TikTok, YouTube, Instagram, atau Twitter..." 
                         required
-                        oninput="detectPlatform()"
                         class="bg-transparent text-white placeholder-gray-500 w-full focus:outline-none text-sm md:text-base"
                     >
                 </div>
@@ -114,19 +105,6 @@
                     <span>Ekstrak File</span>
                 </button>
             </form>
-
-            <!-- Detected Platform Indicator -->
-            <div class="mt-3 px-2 flex items-center justify-between text-xs text-gray-400">
-                <div id="platformBadge" class="flex items-center gap-1.5 font-medium">
-                    <span class="w-2 h-2 rounded-full bg-gray-500"></span>
-                    <span>Otomatis / Menunggu Link</span>
-                </div>
-                <div class="flex gap-3">
-                    <span class="hover:text-purple-400 cursor-pointer" onclick="fillTest('https://www.tiktok.com/@_oreoandmilk_/video/7675687709721005328')">TikTok Test</span>
-                    <span>•</span>
-                    <span class="hover:text-purple-400 cursor-pointer" onclick="fillTest('https://youtu.be/qNOcoUKzt80')">YouTube Test</span>
-                </div>
-            </div>
         </div>
 
         <!-- Status Message -->
@@ -135,57 +113,27 @@
         <!-- Result Card -->
         <div id="resultCard" class="hidden w-full glass-panel rounded-3xl p-6 mb-6">
             <div class="flex flex-col sm:flex-row gap-5 items-center">
-                <!-- Thumbnail -->
                 <div class="relative w-full sm:w-48 h-36 rounded-2xl overflow-hidden bg-black/60 flex-shrink-0 border border-white/10 flex items-center justify-center">
-                    <img id="mediaThumb" src="" alt="Thumbnail" class="w-full h-full object-cover">
-                    <span id="mediaDuration" class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded">00:00</span>
+                    <img id="mediaThumb" src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" alt="Thumbnail" class="w-full h-full object-cover">
                 </div>
 
-                <!-- Info & Download Options -->
                 <div class="flex-grow w-full">
-                    <span id="mediaPlatformTag" class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">TikTok</span>
-                    <h3 id="mediaTitle" class="text-base font-bold text-white mt-2 line-clamp-2 leading-snug">Judul Media Terdeteksi</h3>
-                    <p id="mediaAuthor" class="text-xs text-gray-400 mt-1 mb-4">Pengunggah: -</p>
+                    <span id="mediaPlatformTag" class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">Media</span>
+                    <h3 id="mediaTitle" class="text-base font-bold text-white mt-2 line-clamp-2 leading-snug">Media Siap Diunduh</h3>
+                    <p class="text-xs text-gray-400 mt-1 mb-4">Klik tombol di bawah untuk menyimpan file langsung.</p>
 
-                    <!-- Download Buttons Container -->
-                    <div id="downloadOptions" class="flex flex-wrap gap-2">
-                        <!-- Dynamic Buttons Inserted Here -->
-                    </div>
+                    <div id="downloadOptions" class="flex flex-wrap gap-2"></div>
                 </div>
             </div>
         </div>
 
     </main>
 
-    <!-- Footer -->
     <footer class="text-center text-xs text-gray-500 py-4">
-        OmniStream Hybrid Engine © 2026 — Universal Multi-Platform Media Extractor
+        OmniStream v1.0 — Universal Multi-Platform Direct Media Extractor
     </footer>
 
-    <!-- JavaScript Engine -->
     <script>
-        function fillTest(url) {
-            document.getElementById('mediaUrl').value = url;
-            detectPlatform();
-        }
-
-        function detectPlatform() {
-            const url = document.getElementById('mediaUrl').value.trim();
-            const badge = document.getElementById('platformBadge');
-            
-            if (url.includes('tiktok.com')) {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400"></span><span class="text-cyan-300 font-bold">TikTok Detected</span>`;
-            } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span class="text-red-400 font-bold">YouTube Detected</span>`;
-            } else if (url.includes('instagram.com')) {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-pink-500"></span><span class="text-pink-400 font-bold">Instagram Detected</span>`;
-            } else if (url.includes('twitter.com') || url.includes('x.com')) {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400"></span><span class="text-blue-300 font-bold">X / Twitter Detected</span>`;
-            } else {
-                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-gray-500"></span><span>Otomatis / Menunggu Link</span>`;
-            }
-        }
-
         async function handleExtract(e) {
             e.preventDefault();
             const url = document.getElementById('mediaUrl').value.trim();
@@ -195,62 +143,81 @@
 
             if (!url) return;
 
-            // UI Loading State
             btn.disabled = true;
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengekstrak...</span>`;
             statusBox.classList.remove('hidden', 'text-red-400', 'border-red-500/30', 'bg-red-950/40');
-            statusBox.classList.add('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40', 'pulse-loader');
-            statusBox.innerHTML = `<i class="fa-solid fa-gear fa-spin mr-2"></i> Menghubungkan ke server resolver... Mohon tunggu.`;
+            statusBox.classList.add('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40');
+            statusBox.innerHTML = `<i class="fa-solid fa-gear fa-spin mr-2"></i> Mengambil file media dari server...`;
             resultCard.classList.add('hidden');
 
             try {
-                let data = null;
-
+                // Khusus TikTok gunakan TikWM Engine
                 if (url.includes('tiktok.com')) {
-                    data = await extractTikTok(url);
-                } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                    data = await extractYouTube(url);
-                } else if (url.includes('instagram.com')) {
-                    data = await extractInstagram(url);
-                } else if (url.includes('twitter.com') || url.includes('x.com')) {
-                    data = await extractTwitter(url);
-                } else {
-                    throw new Error("Platform belum didukung. Masukkan link TikTok, YouTube, Instagram, atau Twitter.");
+                    const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+                    const json = await res.json();
+                    if (json.code !== 0) throw new Error("Gagal mengekstrak TikTok. Pastikan video publik!");
+
+                    renderResult('TikTok', 'TikTok Video (No Watermark)', [
+                        { label: 'Download MP4 (Tanpa Watermark)', url: json.data.play, type: 'video' },
+                        { label: 'Download Audio MP3', url: json.data.music, type: 'audio' }
+                    ], json.data.cover);
+                    return;
                 }
 
-                if (!data || !data.downloads || data.downloads.length === 0) {
-                    throw new Error("Gagal mengambil file media. Pastikan link bersifat publik!");
+                // Untuk YouTube, Instagram, dan Twitter gunakan Cobalt Engine Cluster
+                const cobaltInstances = [
+                    'https://api.cobalt.tools',
+                    'https://cobalt-api.kwi.li',
+                    'https://co.wuk.sh'
+                ];
+
+                let downloadUrl = null;
+                let lastError = null;
+
+                for (let instance of cobaltInstances) {
+                    try {
+                        const res = await fetch(`${instance}/`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                url: url,
+                                videoQuality: '720'
+                            })
+                        });
+
+                        if (!res.ok) continue;
+                        const data = await res.json();
+
+                        if (data.url) {
+                            downloadUrl = data.url;
+                            break;
+                        } else if (data.picker) {
+                            downloadUrl = data.picker[0].url;
+                            break;
+                        }
+                    } catch (err) {
+                        lastError = err;
+                    }
                 }
 
-                // Render Result
-                document.getElementById('mediaThumb').src = data.thumbnail || 'https://via.placeholder.com/300x200?text=No+Thumbnail';
-                document.getElementById('mediaTitle').innerText = data.title || 'Media Terdeteksi';
-                document.getElementById('mediaAuthor').innerText = `Pengunggah: ${data.author || 'Publik'}`;
-                document.getElementById('mediaDuration').innerText = data.duration || 'Video';
-                document.getElementById('mediaPlatformTag').innerText = data.platform;
+                if (!downloadUrl) {
+                    throw new Error("Gagal mengambil media. Pastikan link bersifat publik atau coba beberapa saat lagi.");
+                }
 
-                const optionsContainer = document.getElementById('downloadOptions');
-                optionsContainer.innerHTML = '';
+                let platform = 'Media';
+                if (url.includes('youtube.com') || url.includes('youtu.be')) platform = 'YouTube';
+                else if (url.includes('instagram.com')) platform = 'Instagram';
+                else if (url.includes('twitter.com') || url.includes('x.com')) platform = 'X / Twitter';
 
-                data.downloads.forEach(dl => {
-                    const a = document.createElement('a');
-                    a.href = dl.url;
-                    a.target = '_blank';
-                    a.download = dl.filename || 'download';
-                    a.className = `px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
-                        dl.type === 'audio' 
-                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/40' 
-                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/40'
-                    }`;
-                    a.innerHTML = `<i class="fa-solid ${dl.type === 'audio' ? 'fa-music' : 'fa-film'}"></i> ${dl.label}`;
-                    optionsContainer.appendChild(a);
-                });
-
-                statusBox.classList.add('hidden');
-                resultCard.classList.remove('hidden');
+                renderResult(platform, `${platform} Media File`, [
+                    { label: `Download File Media (${platform})`, url: downloadUrl, type: 'video' }
+                ]);
 
             } catch (err) {
-                statusBox.classList.remove('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40', 'pulse-loader');
+                statusBox.classList.remove('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40');
                 statusBox.classList.add('text-red-400', 'border-red-500/30', 'bg-red-950/40');
                 statusBox.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-2"></i> ${err.message}`;
             } finally {
@@ -259,143 +226,33 @@
             }
         }
 
-        // --- TikTok Resolver (TikWM) ---
-        async function extractTikTok(url) {
-            const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
-            const json = await res.json();
-            if (json.code !== 0) throw new Error("Gagal mengekstrak TikTok. Link mungkin privat.");
-            
-            const d = json.data;
-            return {
-                platform: 'TikTok',
-                title: d.title || 'TikTok Video',
-                author: d.author.nickname || d.author.unique_id,
-                thumbnail: d.cover,
-                duration: `${d.duration}s`,
-                downloads: [
-                    { label: 'Download MP4 (Tanpa Watermark)', url: d.play, type: 'video', filename: 'TikTok_NoWM.mp4' },
-                    { label: 'Download MP4 HD', url: d.hdplay || d.play, type: 'video', filename: 'TikTok_HD.mp4' },
-                    { label: 'Download Audio MP3', url: d.music, type: 'audio', filename: 'TikTok_Audio.mp3' }
-                ]
-            };
-        }
+        function renderResult(platform, title, options, thumbUrl) {
+            document.getElementById('statusBox').classList.add('hidden');
+            document.getElementById('mediaPlatformTag').innerText = platform;
+            document.getElementById('mediaTitle').innerText = title;
 
-        // --- YouTube Resolver (Multi-Node Fallback) ---
-        async function extractYouTube(url) {
-            let videoId = '';
-            if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
-            else if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
-            else if (url.includes('shorts/')) videoId = url.split('shorts/')[1].split('?')[0];
-
-            if (!videoId) throw new Error("ID Video YouTube tidak valid.");
-
-            // Node Instances for YouTube
-            const nodes = [
-                `https://pipedapi.kavin.rocks/streams/${videoId}`,
-                `https://api.piped.private.coffee/streams/${videoId}`,
-                `https://pipedapi.mha.fi/streams/${videoId}`
-            ];
-
-            for (let node of nodes) {
-                try {
-                    const res = await fetch(node);
-                    if (!res.ok) continue;
-                    const d = await res.json();
-
-                    const videoStreams = (d.videoStreams || []).filter(s => s.videoOnly === false);
-                    const downloads = [];
-
-                    if (videoStreams.length > 0) {
-                        downloads.push({ label: `Download MP4 (${videoStreams[0].quality || '720p'})`, url: videoStreams[0].url, type: 'video', filename: 'YouTube_Video.mp4' });
-                    }
-                    if (d.audioStreams && d.audioStreams.length > 0) {
-                        downloads.push({ label: 'Download Audio MP3 (High Quality)', url: d.audioStreams[0].url, type: 'audio', filename: 'YouTube_Audio.mp3' });
-                    }
-
-                    // Fallback direct stream format
-                    if (downloads.length === 0 && d.hls) {
-                        downloads.push({ label: 'Download Stream HLS/MP4', url: d.hls, type: 'video', filename: 'YouTube_Stream.mp4' });
-                    }
-
-                    if (downloads.length > 0) {
-                        return {
-                            platform: 'YouTube',
-                            title: d.title || 'YouTube Video',
-                            author: d.uploader || 'YouTube Channel',
-                            thumbnail: d.thumbnailUrl || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-                            duration: 'Video',
-                            downloads: downloads
-                        };
-                    }
-                } catch (e) {
-                    console.log("Node failed, trying next...", e);
-                }
+            if (thumbUrl) {
+                document.getElementById('mediaThumb').src = thumbUrl;
             }
 
-            // Fallback Embed Stream Resolver if Piped API nodes are blocked
-            return {
-                platform: 'YouTube (Direct Engine)',
-                title: `YouTube Video (${videoId})`,
-                author: 'YouTube',
-                thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
-                duration: 'HD Video',
-                downloads: [
-                    { label: 'Download MP4 720p (Direct)', url: `https://ytstream-download-api.vercel.app/download?id=${videoId}`, type: 'video', filename: 'YouTube_720p.mp4' },
-                    { label: 'Download MP3 Audio', url: `https://ytstream-download-api.vercel.app/audio?id=${videoId}`, type: 'audio', filename: 'YouTube_Audio.mp3' }
-                ]
-            };
-        }
+            const optionsContainer = document.getElementById('downloadOptions');
+            optionsContainer.innerHTML = '';
 
-        // --- Twitter / X Resolver ---
-        async function extractTwitter(url) {
-            const tweetId = url.split('/status/')[1]?.split('?')[0];
-            if (!tweetId) throw new Error("URL Twitter/X tidak valid.");
-
-            const res = await fetch(`https://api.vxtwitter.com/Twitter/status/${tweetId}`);
-            const d = await res.json();
-
-            const downloads = [];
-            if (d.media_extended) {
-                d.media_extended.forEach((m, idx) => {
-                    if (m.type === 'video' || m.type === 'gif') {
-                        downloads.push({ label: `Download Video MP4 #${idx+1}`, url: m.url, type: 'video', filename: `Twitter_Video_${idx+1}.mp4` });
-                    } else if (m.type === 'image') {
-                        downloads.push({ label: `Download Foto HD #${idx+1}`, url: m.url, type: 'image', filename: `Twitter_Image_${idx+1}.jpg` });
-                    }
-                });
-            }
-
-            return {
-                platform: 'X / Twitter',
-                title: d.text || 'X Post',
-                author: `@${d.user_screen_name || 'user'}`,
-                thumbnail: d.media_extended?.[0]?.thumbnail_url || d.media_extended?.[0]?.url || '',
-                duration: 'Media',
-                downloads: downloads
-            };
-        }
-
-        // --- Instagram Resolver ---
-        async function extractInstagram(url) {
-            const cleanUrl = url.split('?')[0];
-            const res = await fetch(`https://api.cobalt.tools/api/json`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url: cleanUrl })
+            options.forEach(opt => {
+                const a = document.createElement('a');
+                a.href = opt.url;
+                a.target = '_blank';
+                a.rel = 'noopener noreferrer';
+                a.className = `px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
+                    opt.type === 'audio' 
+                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/40' 
+                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/40'
+                }`;
+                a.innerHTML = `<i class="fa-solid ${opt.type === 'audio' ? 'fa-music' : 'fa-download'}"></i> ${opt.label}`;
+                optionsContainer.appendChild(a);
             });
-            const d = await res.json();
 
-            if (d.url) {
-                return {
-                    platform: 'Instagram',
-                    title: 'Instagram Post / Reel',
-                    author: 'Instagram User',
-                    thumbnail: 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=400',
-                    duration: 'Media',
-                    downloads: [{ label: 'Download Instagram Media', url: d.url, type: 'video', filename: 'Instagram_Media.mp4' }]
-                };
-            }
-            throw new Error("Gagal mengambil Instagram. Pastikan akun tidak diprivat!");
+            document.getElementById('resultCard').classList.remove('hidden');
         }
     </script>
 </body>
