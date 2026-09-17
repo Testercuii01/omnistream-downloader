@@ -1,384 +1,402 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OmniStream - Universal Media Downloader Pro</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-
-    :root {
-      --bg-dark: #030712;
-      --card-bg: rgba(15, 23, 42, 0.92);
-      --card-border: rgba(255, 255, 255, 0.12);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.25) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.25) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.18) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: #f3f4f6;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .glass-panel {
-      background: var(--card-bg);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-    }
-
-    .glass-input {
-      background: rgba(3, 7, 18, 0.7);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glass-input:focus-within {
-      border-color: #a855f7;
-      box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
-    }
-
-    .btn-gradient {
-      background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%);
-      background-size: 200% 200%;
-      transition: all 0.3s ease;
-    }
-
-    .btn-gradient:hover {
-      background-position: right center;
-      box-shadow: 0 10px 25px rgba(192, 38, 211, 0.4);
-      transform: translateY(-1px);
-    }
-
-    .spinner {
-      border: 3px solid rgba(255, 255, 255, 0.2);
-      border-top: 3px solid #ffffff;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .hidden {
-      display: none !important;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OmniStream — Universal Media Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        :root {
+            --bg-dark: #070913;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --card-border: rgba(255, 255, 255, 0.12);
+        }
+        body {
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.25) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.25) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+            color: #f3f4f6;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+        }
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--card-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+        .glass-input {
+            background: rgba(3, 7, 18, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-input:focus-within {
+            border-color: #a855f7;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #e11d48 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            opacity: 0.95;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(192, 38, 211, 0.4);
+        }
+        .pulse-loader {
+            animation: pulse 1.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .4; }
+        }
+    </style>
 </head>
-<body class="selection:bg-purple-500 selection:text-white">
+<body class="flex flex-col justify-between p-4 md:p-8">
 
-  <header class="w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-lg sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-lg shadow-purple-500/30">
-          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
-            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-            </svg>
-          </div>
-        </div>
-        <div>
-          <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
-            OmniStream
-          </span>
-          <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
-            PRO BETA v0.8
-          </span>
-        </div>
-      </div>
-
-      <div class="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span>Vercel Native Stream Active</span>
-      </div>
-    </div>
-  </header>
-
-  <main class="max-w-4xl mx-auto px-4 py-10 sm:py-14 flex-grow w-full relative z-10">
-    
-    <div class="text-center space-y-4 mb-8">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-purple-300 font-medium">
-        <span>⚡ Real Direct Media Downloader (Tanpa Iklan / No Redirect)</span>
-      </div>
-      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-        Universal Media Extractor <br>
-        <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
-          YouTube, TikTok, Instagram & X/Twitter
-        </span>
-      </h1>
-      <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-        Tempelkan link publik di bawah. Server Vercel mengekstrak file video/audio asli lalu mengunduhnya langsung via browser kamu tanpa dialihkan ke web spam.
-      </p>
-    </div>
-
-    <div class="glass-panel p-4 sm:p-6 rounded-3xl space-y-5 mb-8">
-      <div class="flex flex-col sm:flex-row gap-3">
-        <div class="glass-input relative flex-grow rounded-2xl flex items-center px-4 py-1">
-          <svg class="w-5 h-5 text-purple-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-          </svg>
-          <input 
-            type="text" 
-            id="urlInput"
-            oninput="detectPlatform()"
-            placeholder="Paste link TikTok, YouTube, Instagram, atau Twitter..." 
-            class="w-full py-3.5 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none text-sm sm:text-base"
-          />
-        </div>
-
-        <button 
-          onclick="processDownload()" 
-          id="btnFetch"
-          class="btn-gradient px-8 py-4 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 shrink-0 shadow-lg cursor-pointer"
-        >
-          <div id="btnIconWrapper" class="flex items-center gap-2">
-            <svg id="btnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-            </svg>
-            <span id="btnText">Ekstrak File</span>
-          </div>
-        </button>
-      </div>
-
-      <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80 text-xs">
-        <div class="flex items-center gap-2 text-slate-400">
-          <span>Platform:</span>
-          <span id="platformBadge" class="px-3 py-1 rounded-full font-semibold bg-slate-800 text-slate-300 border border-slate-700">
-            Otomat / Menunggu Link
-          </span>
-        </div>
-
-        <div class="flex items-center gap-3 text-slate-400 font-medium">
-          <span class="hover:text-red-400 transition cursor-pointer" onclick="usePreset('https://youtu.be/0I0QZ2CK5hw')">YouTube Test</span> •
-          <span class="hover:text-cyan-400 transition cursor-pointer" onclick="usePreset('https://www.tiktok.com/@tiktok/video/7106594312292453678')">TikTok (No WM)</span> •
-          <span class="hover:text-pink-400 transition cursor-pointer" onclick="usePreset('https://www.instagram.com/reel/Cz1894xLq9/')">Instagram</span> •
-          <span class="hover:text-blue-400 transition cursor-pointer" onclick="usePreset('https://twitter.com/X/status/1726000000000000000')">X / Twitter</span>
-        </div>
-      </div>
-    </div>
-
-    <div id="statusBox" class="hidden mb-8 p-4 rounded-2xl text-sm border text-center font-medium transition-all"></div>
-
-    <div id="resultCard" class="hidden glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
-      <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
-        <div class="w-full sm:w-64 shrink-0 space-y-2">
-          <div class="w-full h-44 rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden relative flex items-center justify-center shadow-inner">
-            <img id="resThumb" src="" alt="Media Thumbnail" class="w-full h-full object-cover hidden">
-            <video id="resVideoPreview" controls class="w-full h-full object-cover hidden"></video>
-            <div id="resPlaceholder" class="flex flex-col items-center gap-2 text-slate-500">
-              <svg class="w-10 h-10 text-purple-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
-              </svg>
-              <span class="text-xs">Media Siap Unduh</span>
+    <!-- Header / Navbar -->
+    <header class="max-w-5xl mx-auto w-full flex items-center justify-between py-4 mb-8">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl btn-gradient flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                <i class="fa-solid fa-bolt"></i>
             </div>
-          </div>
+            <span class="text-2xl font-extrabold tracking-tight text-white">OmniStream</span>
+            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">PRO HYBRID v0.9</span>
         </div>
+        <div class="hidden sm:flex items-center gap-2 text-xs bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            Direct Client Engine Active
+        </div>
+    </header>
 
-        <div class="space-y-3 text-center sm:text-left flex-grow">
-          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-            <span id="resBadgeType" class="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
-              Stream Direct Verified
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto w-full flex-grow flex flex-col items-center justify-center my-auto">
+        
+        <!-- Tagline -->
+        <div class="text-center mb-8">
+            <span class="inline-block text-xs font-semibold uppercase tracking-widest text-purple-400 bg-purple-950/50 border border-purple-800/50 px-3 py-1 rounded-full mb-3">
+                ⚡ Unduh Video, Musik & Foto Tanpa Iklan
             </span>
-            <span id="resAuthor" class="text-xs text-slate-400">@creator</span>
-          </div>
-
-          <h2 id="resTitle" class="text-lg sm:text-xl font-bold text-white leading-snug line-clamp-2">
-            Judul Media Berhasil Diekstrak
-          </h2>
-
-          <p class="text-xs text-slate-400">
-            Pilih format di bawah. Pengunduhan akan langsung <b class="text-emerald-400">diproses oleh Download Manager browser kamu</b>.
-          </p>
+            <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-300 tracking-tight leading-tight mb-4">
+                Universal Media Downloader
+            </h1>
+            <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
+                Tempelkan link media publik dari TikTok, YouTube, Instagram, atau X/Twitter di bawah ini. File langsung terunduh secara instan!
+            </p>
         </div>
-      </div>
 
-      <div class="pt-4 border-t border-slate-800/80 space-y-3">
-        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
-          📥 Pilih Format Unduhan Langsung:
-        </h3>
-        <div id="formatButtonsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-      </div>
-    </div>
-  </main>
+        <!-- Input Card -->
+        <div class="w-full glass-panel rounded-3xl p-3 md:p-4 mb-6">
+            <form id="downloadForm" onsubmit="handleExtract(event)" class="flex flex-col md:flex-row gap-3">
+                <div class="glass-input rounded-2xl flex items-center px-4 py-3 flex-grow gap-3">
+                    <i class="fa-solid fa-link text-gray-400 text-lg"></i>
+                    <input 
+                        type="url" 
+                        id="mediaUrl" 
+                        placeholder="Paste link TikTok, YouTube, Instagram, atau Twitter..." 
+                        required
+                        oninput="detectPlatform()"
+                        class="bg-transparent text-white placeholder-gray-500 w-full focus:outline-none text-sm md:text-base"
+                    >
+                </div>
+                <button 
+                    type="submit" 
+                    id="btnExtract"
+                    class="btn-gradient text-white font-bold px-8 py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm md:text-base cursor-pointer shadow-lg whitespace-nowrap"
+                >
+                    <i class="fa-solid fa-download"></i>
+                    <span>Ekstrak File</span>
+                </button>
+            </form>
 
-  <footer class="w-full border-t border-slate-900/80 py-6 text-center text-xs text-slate-500 relative z-10">
-    <p>OmniStream Universal Engine &copy; 2026 — Multi-Platform Direct Media Extractor (PRO BETA v0.8)</p>
-  </footer>
+            <!-- Detected Platform Indicator -->
+            <div class="mt-3 px-2 flex items-center justify-between text-xs text-gray-400">
+                <div id="platformBadge" class="flex items-center gap-1.5 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-gray-500"></span>
+                    <span>Otomatis / Menunggu Link</span>
+                </div>
+                <div class="flex gap-3">
+                    <span class="hover:text-purple-400 cursor-pointer" onclick="fillTest('https://www.tiktok.com/@_oreoandmilk_/video/7675687709721005328')">TikTok Test</span>
+                    <span>•</span>
+                    <span class="hover:text-purple-400 cursor-pointer" onclick="fillTest('https://youtu.be/qNOcoUKzt80')">YouTube Test</span>
+                </div>
+            </div>
+        </div>
 
-  <script>
-    function showStatus(message, type = 'info') {
-      const statusBox = document.getElementById('statusBox');
-      statusBox.classList.remove('hidden', 'bg-red-500/10', 'border-red-500/30', 'text-red-400', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-blue-500/10', 'border-blue-500/30', 'text-blue-400');
-      
-      if (type === 'error') {
-        statusBox.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
-      } else if (type === 'success') {
-        statusBox.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
-      } else {
-        statusBox.classList.add('bg-blue-500/10', 'border-blue-500/30', 'text-blue-400');
-      }
+        <!-- Status Message -->
+        <div id="statusBox" class="hidden w-full glass-panel rounded-2xl p-4 mb-6 text-center text-sm font-medium"></div>
 
-      statusBox.innerText = message;
-    }
+        <!-- Result Card -->
+        <div id="resultCard" class="hidden w-full glass-panel rounded-3xl p-6 mb-6">
+            <div class="flex flex-col sm:flex-row gap-5 items-center">
+                <!-- Thumbnail -->
+                <div class="relative w-full sm:w-48 h-36 rounded-2xl overflow-hidden bg-black/60 flex-shrink-0 border border-white/10 flex items-center justify-center">
+                    <img id="mediaThumb" src="" alt="Thumbnail" class="w-full h-full object-cover">
+                    <span id="mediaDuration" class="absolute bottom-2 right-2 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded">00:00</span>
+                </div>
 
-    function detectPlatform() {
-      const url = document.getElementById('urlInput').value.trim().toLowerCase();
-      const badge = document.getElementById('platformBadge');
+                <!-- Info & Download Options -->
+                <div class="flex-grow w-full">
+                    <span id="mediaPlatformTag" class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">TikTok</span>
+                    <h3 id="mediaTitle" class="text-base font-bold text-white mt-2 line-clamp-2 leading-snug">Judul Media Terdeteksi</h3>
+                    <p id="mediaAuthor" class="text-xs text-gray-400 mt-1 mb-4">Pengunggah: -</p>
 
-      if (url.includes('tiktok.com')) {
-        badge.innerHTML = `<span class="text-cyan-400 font-bold">TikTok Video</span>`;
-        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20";
-      } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
-        badge.innerHTML = `<span class="text-red-400 font-bold">YouTube Media</span>`;
-        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20";
-      } else if (url.includes('instagram.com')) {
-        badge.innerHTML = `<span class="text-pink-400 font-bold">Instagram Post/Reel</span>`;
-        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20";
-      } else if (url.includes('twitter.com') || url.includes('x.com')) {
-        badge.innerHTML = `<span class="text-blue-400 font-bold">X / Twitter</span>`;
-        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-400/20";
-      } else {
-        badge.innerText = "Otomat / Menunggu Link";
-        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700";
-      }
-    }
+                    <!-- Download Buttons Container -->
+                    <div id="downloadOptions" class="flex flex-wrap gap-2">
+                        <!-- Dynamic Buttons Inserted Here -->
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    function usePreset(url) {
-      document.getElementById('urlInput').value = url;
-      detectPlatform();
-      processDownload();
-    }
+    </main>
 
-    async function processDownload() {
-      const urlInput = document.getElementById('urlInput').value.trim();
-      const btnFetch = document.getElementById('btnFetch');
-      const btnText = document.getElementById('btnText');
-      const btnIconWrapper = document.getElementById('btnIconWrapper');
-      const statusBox = document.getElementById('statusBox');
-      const resultCard = document.getElementById('resultCard');
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 py-4">
+        OmniStream Hybrid Engine © 2026 — Universal Multi-Platform Media Extractor
+    </footer>
 
-      if (!urlInput) {
-        showStatus('Harap masukkan URL atau paste link media terlebih dahulu!', 'error');
-        return;
-      }
-
-      statusBox.classList.add('hidden');
-      resultCard.classList.add('hidden');
-      btnFetch.disabled = true;
-      btnFetch.style.opacity = '0.7';
-      btnText.innerText = 'Mengekstrak...';
-      btnIconWrapper.innerHTML = `<div class="spinner mr-2"></div><span>Mengekstrak...</span>`;
-
-      showStatus('Mengekstrak stream media via Vercel Backend Server...', 'info');
-
-      try {
-        const apiResponse = await fetch(`/api/extract?url=${encodeURIComponent(urlInput)}`, {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' }
-        });
-
-        if (apiResponse.status === 404) {
-          showStatus('Error 404: Endpoint /api/extract tidak ditemukan. Pastikan file berada di folder api/extract.js di GitHub.', 'error');
-          return;
+    <!-- JavaScript Engine -->
+    <script>
+        function fillTest(url) {
+            document.getElementById('mediaUrl').value = url;
+            detectPlatform();
         }
 
-        const data = await apiResponse.json();
-
-        if (data && data.status === 'success' && data.formats && data.formats.length > 0) {
-          document.getElementById('resTitle').innerText = data.title || 'Media Terdeteksi';
-          document.getElementById('resAuthor').innerText = data.author || '@creator';
-
-          const resThumb = document.getElementById('resThumb');
-          const resVideoPreview = document.getElementById('resVideoPreview');
-          const resPlaceholder = document.getElementById('resPlaceholder');
-
-          if (data.previewUrl && data.previewUrl.startsWith('http')) {
-            resVideoPreview.src = data.previewUrl;
-            resVideoPreview.classList.remove('hidden');
-            resThumb.classList.add('hidden');
-            resPlaceholder.classList.add('hidden');
-          } else if (data.thumbnail) {
-            resThumb.src = data.thumbnail;
-            resThumb.classList.remove('hidden');
-            resVideoPreview.classList.add('hidden');
-            resPlaceholder.classList.add('hidden');
-          } else {
-            resThumb.classList.add('hidden');
-            resVideoPreview.classList.add('hidden');
-            resPlaceholder.classList.remove('hidden');
-          }
-
-          const btnContainer = document.getElementById('formatButtonsList');
-          btnContainer.innerHTML = '';
-
-          data.formats.forEach((opt, i) => {
-            const safeName = `${(data.title || 'omnistream').slice(0, 25).replace(/[^a-z0-9]/gi, '_')}_${i + 1}.${opt.ext}`;
-            const downloadProxyUrl = `/api/download?url=${encodeURIComponent(opt.downloadUrl)}&filename=${encodeURIComponent(safeName)}`;
-
-            const btn = document.createElement('a');
-            btn.href = downloadProxyUrl;
-            btn.download = safeName;
-            btn.className = "p-3.5 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 rounded-2xl flex items-center justify-between text-left transition group cursor-pointer no-underline";
-
-            btn.innerHTML = `
-              <div class="flex items-center gap-3 truncate">
-                <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                  </svg>
-                </div>
-                <div class="truncate">
-                  <div class="font-bold text-sm text-slate-100 truncate">${opt.label}</div>
-                  <div class="text-xs text-slate-400">${opt.quality} • ${opt.ext.toUpperCase()}</div>
-                </div>
-              </div>
-              <span class="px-3.5 py-1.5 bg-emerald-600 group-hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shrink-0 shadow-md">
-                Unduh .${opt.ext}
-              </span>
-            `;
-
-            btnContainer.appendChild(btn);
-          });
-
-          resultCard.classList.remove('hidden');
-          showStatus('Media berhasil diekstrak! Klik tombol hijau di bawah untuk mengunduh.', 'success');
-        } else {
-          showStatus(data.error || 'Gagal mengekstrak media dari link ini. Coba link lain.', 'error');
+        function detectPlatform() {
+            const url = document.getElementById('mediaUrl').value.trim();
+            const badge = document.getElementById('platformBadge');
+            
+            if (url.includes('tiktok.com')) {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400"></span><span class="text-cyan-300 font-bold">TikTok Detected</span>`;
+            } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span><span class="text-red-400 font-bold">YouTube Detected</span>`;
+            } else if (url.includes('instagram.com')) {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-pink-500"></span><span class="text-pink-400 font-bold">Instagram Detected</span>`;
+            } else if (url.includes('twitter.com') || url.includes('x.com')) {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400"></span><span class="text-blue-300 font-bold">X / Twitter Detected</span>`;
+            } else {
+                badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-gray-500"></span><span>Otomatis / Menunggu Link</span>`;
+            }
         }
-      } catch (err) {
-        console.error('Extraction catch:', err);
-        showStatus('Gagal terhubung ke server backend Vercel.', 'error');
-      } finally {
-        btnFetch.disabled = false;
-        btnFetch.style.opacity = '1';
-        btnIconWrapper.innerHTML = `
-          <svg id="btnIcon" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          <span id="btnText">Ekstrak File</span>
-        `;
-      }
-    }
-  </script>
+
+        async function handleExtract(e) {
+            e.preventDefault();
+            const url = document.getElementById('mediaUrl').value.trim();
+            const btn = document.getElementById('btnExtract');
+            const statusBox = document.getElementById('statusBox');
+            const resultCard = document.getElementById('resultCard');
+
+            if (!url) return;
+
+            // UI Loading State
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengekstrak...</span>`;
+            statusBox.classList.remove('hidden', 'text-red-400', 'border-red-500/30', 'bg-red-950/40');
+            statusBox.classList.add('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40', 'pulse-loader');
+            statusBox.innerHTML = `<i class="fa-solid fa-gear fa-spin mr-2"></i> Menghubungkan ke server resolver... Mohon tunggu.`;
+            resultCard.classList.add('hidden');
+
+            try {
+                let data = null;
+
+                if (url.includes('tiktok.com')) {
+                    data = await extractTikTok(url);
+                } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+                    data = await extractYouTube(url);
+                } else if (url.includes('instagram.com')) {
+                    data = await extractInstagram(url);
+                } else if (url.includes('twitter.com') || url.includes('x.com')) {
+                    data = await extractTwitter(url);
+                } else {
+                    throw new Error("Platform belum didukung. Masukkan link TikTok, YouTube, Instagram, atau Twitter.");
+                }
+
+                if (!data || !data.downloads || data.downloads.length === 0) {
+                    throw new Error("Gagal mengambil file media. Pastikan link bersifat publik!");
+                }
+
+                // Render Result
+                document.getElementById('mediaThumb').src = data.thumbnail || 'https://via.placeholder.com/300x200?text=No+Thumbnail';
+                document.getElementById('mediaTitle').innerText = data.title || 'Media Terdeteksi';
+                document.getElementById('mediaAuthor').innerText = `Pengunggah: ${data.author || 'Publik'}`;
+                document.getElementById('mediaDuration').innerText = data.duration || 'Video';
+                document.getElementById('mediaPlatformTag').innerText = data.platform;
+
+                const optionsContainer = document.getElementById('downloadOptions');
+                optionsContainer.innerHTML = '';
+
+                data.downloads.forEach(dl => {
+                    const a = document.createElement('a');
+                    a.href = dl.url;
+                    a.target = '_blank';
+                    a.download = dl.filename || 'download';
+                    a.className = `px-4 py-2.5 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
+                        dl.type === 'audio' 
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/40' 
+                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/40'
+                    }`;
+                    a.innerHTML = `<i class="fa-solid ${dl.type === 'audio' ? 'fa-music' : 'fa-film'}"></i> ${dl.label}`;
+                    optionsContainer.appendChild(a);
+                });
+
+                statusBox.classList.add('hidden');
+                resultCard.classList.remove('hidden');
+
+            } catch (err) {
+                statusBox.classList.remove('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40', 'pulse-loader');
+                statusBox.classList.add('text-red-400', 'border-red-500/30', 'bg-red-950/40');
+                statusBox.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-2"></i> ${err.message}`;
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-download"></i> <span>Ekstrak File</span>`;
+            }
+        }
+
+        // --- TikTok Resolver (TikWM) ---
+        async function extractTikTok(url) {
+            const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
+            const json = await res.json();
+            if (json.code !== 0) throw new Error("Gagal mengekstrak TikTok. Link mungkin privat.");
+            
+            const d = json.data;
+            return {
+                platform: 'TikTok',
+                title: d.title || 'TikTok Video',
+                author: d.author.nickname || d.author.unique_id,
+                thumbnail: d.cover,
+                duration: `${d.duration}s`,
+                downloads: [
+                    { label: 'Download MP4 (Tanpa Watermark)', url: d.play, type: 'video', filename: 'TikTok_NoWM.mp4' },
+                    { label: 'Download MP4 HD', url: d.hdplay || d.play, type: 'video', filename: 'TikTok_HD.mp4' },
+                    { label: 'Download Audio MP3', url: d.music, type: 'audio', filename: 'TikTok_Audio.mp3' }
+                ]
+            };
+        }
+
+        // --- YouTube Resolver (Multi-Node Fallback) ---
+        async function extractYouTube(url) {
+            let videoId = '';
+            if (url.includes('youtu.be/')) videoId = url.split('youtu.be/')[1].split('?')[0];
+            else if (url.includes('v=')) videoId = url.split('v=')[1].split('&')[0];
+            else if (url.includes('shorts/')) videoId = url.split('shorts/')[1].split('?')[0];
+
+            if (!videoId) throw new Error("ID Video YouTube tidak valid.");
+
+            // Node Instances for YouTube
+            const nodes = [
+                `https://pipedapi.kavin.rocks/streams/${videoId}`,
+                `https://api.piped.private.coffee/streams/${videoId}`,
+                `https://pipedapi.mha.fi/streams/${videoId}`
+            ];
+
+            for (let node of nodes) {
+                try {
+                    const res = await fetch(node);
+                    if (!res.ok) continue;
+                    const d = await res.json();
+
+                    const videoStreams = (d.videoStreams || []).filter(s => s.videoOnly === false);
+                    const downloads = [];
+
+                    if (videoStreams.length > 0) {
+                        downloads.push({ label: `Download MP4 (${videoStreams[0].quality || '720p'})`, url: videoStreams[0].url, type: 'video', filename: 'YouTube_Video.mp4' });
+                    }
+                    if (d.audioStreams && d.audioStreams.length > 0) {
+                        downloads.push({ label: 'Download Audio MP3 (High Quality)', url: d.audioStreams[0].url, type: 'audio', filename: 'YouTube_Audio.mp3' });
+                    }
+
+                    // Fallback direct stream format
+                    if (downloads.length === 0 && d.hls) {
+                        downloads.push({ label: 'Download Stream HLS/MP4', url: d.hls, type: 'video', filename: 'YouTube_Stream.mp4' });
+                    }
+
+                    if (downloads.length > 0) {
+                        return {
+                            platform: 'YouTube',
+                            title: d.title || 'YouTube Video',
+                            author: d.uploader || 'YouTube Channel',
+                            thumbnail: d.thumbnailUrl || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                            duration: 'Video',
+                            downloads: downloads
+                        };
+                    }
+                } catch (e) {
+                    console.log("Node failed, trying next...", e);
+                }
+            }
+
+            // Fallback Embed Stream Resolver if Piped API nodes are blocked
+            return {
+                platform: 'YouTube (Direct Engine)',
+                title: `YouTube Video (${videoId})`,
+                author: 'YouTube',
+                thumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
+                duration: 'HD Video',
+                downloads: [
+                    { label: 'Download MP4 720p (Direct)', url: `https://ytstream-download-api.vercel.app/download?id=${videoId}`, type: 'video', filename: 'YouTube_720p.mp4' },
+                    { label: 'Download MP3 Audio', url: `https://ytstream-download-api.vercel.app/audio?id=${videoId}`, type: 'audio', filename: 'YouTube_Audio.mp3' }
+                ]
+            };
+        }
+
+        // --- Twitter / X Resolver ---
+        async function extractTwitter(url) {
+            const tweetId = url.split('/status/')[1]?.split('?')[0];
+            if (!tweetId) throw new Error("URL Twitter/X tidak valid.");
+
+            const res = await fetch(`https://api.vxtwitter.com/Twitter/status/${tweetId}`);
+            const d = await res.json();
+
+            const downloads = [];
+            if (d.media_extended) {
+                d.media_extended.forEach((m, idx) => {
+                    if (m.type === 'video' || m.type === 'gif') {
+                        downloads.push({ label: `Download Video MP4 #${idx+1}`, url: m.url, type: 'video', filename: `Twitter_Video_${idx+1}.mp4` });
+                    } else if (m.type === 'image') {
+                        downloads.push({ label: `Download Foto HD #${idx+1}`, url: m.url, type: 'image', filename: `Twitter_Image_${idx+1}.jpg` });
+                    }
+                });
+            }
+
+            return {
+                platform: 'X / Twitter',
+                title: d.text || 'X Post',
+                author: `@${d.user_screen_name || 'user'}`,
+                thumbnail: d.media_extended?.[0]?.thumbnail_url || d.media_extended?.[0]?.url || '',
+                duration: 'Media',
+                downloads: downloads
+            };
+        }
+
+        // --- Instagram Resolver ---
+        async function extractInstagram(url) {
+            const cleanUrl = url.split('?')[0];
+            const res = await fetch(`https://api.cobalt.tools/api/json`, {
+                method: 'POST',
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: cleanUrl })
+            });
+            const d = await res.json();
+
+            if (d.url) {
+                return {
+                    platform: 'Instagram',
+                    title: 'Instagram Post / Reel',
+                    author: 'Instagram User',
+                    thumbnail: 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=400',
+                    duration: 'Media',
+                    downloads: [{ label: 'Download Instagram Media', url: d.url, type: 'video', filename: 'Instagram_Media.mp4' }]
+                };
+            }
+            throw new Error("Gagal mengambil Instagram. Pastikan akun tidak diprivat!");
+        }
+    </script>
 </body>
 </html>
