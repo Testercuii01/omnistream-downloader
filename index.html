@@ -49,41 +49,43 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(192, 38, 211, 0.4);
         }
+        .btn-gradient:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
     </style>
 </head>
 <body class="flex flex-col justify-between p-4 md:p-8">
 
-    <!-- Header -->
     <header class="max-w-5xl mx-auto w-full flex items-center justify-between py-4 mb-8">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl btn-gradient flex items-center justify-center text-white font-bold text-xl shadow-lg">
                 <i class="fa-solid fa-bolt"></i>
             </div>
             <span class="text-2xl font-extrabold tracking-tight text-white">OmniStream</span>
-            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">v1.2 PRO Anti-Error</span>
+            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">v1.3 AUTO-SAVE</span>
         </div>
         <div class="hidden sm:flex items-center gap-2 text-xs bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            Multi-Node API Active
+            Direct Blob Download Active
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="max-w-3xl mx-auto w-full flex-grow flex flex-col items-center justify-center my-auto">
         
         <div class="text-center mb-8">
             <span class="inline-block text-xs font-semibold uppercase tracking-widest text-purple-400 bg-purple-950/50 border border-purple-800/50 px-3 py-1 rounded-full mb-3">
-                ⚡ Unduh Video, Musik & Foto Tanpa Ribet
+                ⚡ Unduh Otomatis Tanpa Pindah Tab
             </span>
             <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-300 tracking-tight leading-tight mb-4">
                 Universal Media Downloader
             </h1>
             <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
-                Tempelkan link dari TikTok, YouTube, Instagram, atau X/Twitter. Mesin kami akan mencari jalur tercepat secara otomatis.
+                Tempelkan link dari TikTok, YouTube, Instagram, atau X/Twitter. File akan diunduh langsung ke galeri/HP tanpa membuka tab iklan.
             </p>
         </div>
 
-        <!-- Form Card -->
         <div class="w-full glass-panel rounded-3xl p-3 md:p-4 mb-6">
             <form id="downloadForm" onsubmit="handleExtract(event)" class="flex flex-col md:flex-row gap-3">
                 <div class="glass-input rounded-2xl flex items-center px-4 py-3 flex-grow gap-3">
@@ -107,10 +109,8 @@
             </form>
         </div>
 
-        <!-- Status Message -->
         <div id="statusBox" class="hidden w-full glass-panel rounded-2xl p-4 mb-6 text-center text-sm font-medium"></div>
 
-        <!-- Result Card -->
         <div id="resultCard" class="hidden w-full glass-panel rounded-3xl p-6 mb-6">
             <div class="flex flex-col sm:flex-row gap-5 items-center">
                 <div class="relative w-full sm:w-48 h-36 rounded-2xl overflow-hidden bg-black/60 flex-shrink-0 border border-white/10 flex items-center justify-center">
@@ -120,7 +120,7 @@
                 <div class="flex-grow w-full">
                     <span id="mediaPlatformTag" class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">Media</span>
                     <h3 id="mediaTitle" class="text-base font-bold text-white mt-2 line-clamp-2 leading-snug">Media Siap Diunduh</h3>
-                    <p class="text-xs text-gray-400 mt-1 mb-4">Pilih format untuk menyimpan file.</p>
+                    <p class="text-xs text-gray-400 mt-1 mb-4">Klik tombol di bawah untuk mengunduh otomatis tanpa pindah tab.</p>
 
                     <div id="downloadOptions" class="flex flex-wrap gap-2"></div>
                 </div>
@@ -130,10 +130,52 @@
     </main>
 
     <footer class="text-center text-xs text-gray-500 py-4">
-        OmniStream v1.2 PRO — Server Bypass Multi-Engine
+        OmniStream v1.3 Auto-Save Engine
     </footer>
 
     <script>
+        // FUNGSI UNTUK MENGUNDUH LANGSUNG TANPA PINDAH TAB
+        async function forceDownload(url, filename, btnElement) {
+            const originalContent = btnElement.innerHTML;
+            btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
+            btnElement.disabled = true;
+
+            try {
+                // 1. Coba sedot file secara langsung ke memori browser
+                const response = await fetch(url);
+                
+                if (!response.ok) throw new Error("Gagal menyedot data");
+
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                // 2. Buat link gaib (invisible) untuk memicu download lokal
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = blobUrl;
+                a.download = filename; // Paksa nama file biar langsung save
+                document.body.appendChild(a);
+                a.click();
+
+                // 3. Bersihkan memori
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
+
+                btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Tersimpan!`;
+            } catch (error) {
+                console.error("Blob fetch gagal (CORS). Menggunakan jalur alternatif...", error);
+                
+                // JIKA SERVER LUAR MEMBLOKIR BLOB FETCH, BUKA LINK SECARA PAKSA DI TAB BARU SEBAGAI CADANGAN
+                btnElement.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Buka Link Asli`;
+                window.open(url, '_blank'); 
+            } finally {
+                setTimeout(() => {
+                    btnElement.innerHTML = originalContent;
+                    btnElement.disabled = false;
+                }, 3000);
+            }
+        }
+
         async function handleExtract(e) {
             e.preventDefault();
             const url = document.getElementById('mediaUrl').value.trim();
@@ -151,34 +193,29 @@
             resultCard.classList.add('hidden');
 
             try {
-                // 1. TIKTOK ENGINE (TikWM - Terbukti Stabil)
+                // 1. TIKTOK ENGINE
                 if (url.includes('tiktok.com')) {
                     const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
                     const json = await res.json();
                     if (json.code !== 0) throw new Error("Gagal mengekstrak TikTok.");
 
                     renderResult('TikTok', json.data.title || 'TikTok Video', [
-                        { label: 'Download MP4 (Tanpa Watermark)', url: json.data.play, type: 'video' },
-                        { label: 'Download Audio MP3', url: json.data.music, type: 'audio' }
+                        { label: 'Unduh MP4 (Otomatis)', url: json.data.play, type: 'video', filename: 'TikTok_Video.mp4' },
+                        { label: 'Unduh MP3 (Otomatis)', url: json.data.music, type: 'audio', filename: 'TikTok_Lagu.mp3' }
                     ], json.data.cover);
                     return;
                 }
 
-                // 2. YOUTUBE ENGINE (Siputzx API + Fail-Safe)
+                // 2. YOUTUBE ENGINE
                 if (url.includes('youtube.com') || url.includes('youtu.be')) {
                     let id = url.split('youtu.be/')[1]?.split('?')[0] || url.split('v=')[1]?.split('&')[0] || url.split('shorts/')[1]?.split('?')[0];
                     let thumbUrl = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500';
-                    let title = "YouTube Video";
 
                     try {
-                        // Coba tembak ke API Siputzx (Anti-CORS)
                         const resMp4 = await fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(url)}`);
                         const dataMp4 = await resMp4.json();
 
                         if (dataMp4.status && dataMp4.data && dataMp4.data.dl) {
-                            title = dataMp4.data.title || title;
-                            
-                            // Coba ambil MP3 juga secara paralel (opsional)
                             let mp3Url = null;
                             try {
                                 const resMp3 = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(url)}`);
@@ -186,25 +223,22 @@
                                 if (dataMp3.status && dataMp3.data.dl) mp3Url = dataMp3.data.dl;
                             } catch(err) {}
 
-                            const downloads = [{ label: 'Download MP4 HD', url: dataMp4.data.dl, type: 'video' }];
-                            if (mp3Url) downloads.push({ label: 'Download Audio MP3', url: mp3Url, type: 'audio' });
+                            const downloads = [{ label: 'Unduh MP4 HD (Otomatis)', url: dataMp4.data.dl, type: 'video', filename: 'YouTube_Video.mp4' }];
+                            if (mp3Url) downloads.push({ label: 'Unduh MP3 (Otomatis)', url: mp3Url, type: 'audio', filename: 'YouTube_Audio.mp3' });
 
-                            renderResult('YouTube', title, downloads, thumbUrl);
+                            renderResult('YouTube', dataMp4.data.title || 'YouTube Video', downloads, thumbUrl);
                             return;
                         }
-                    } catch (err) {
-                        console.log("API Utama gagal, beralih ke Fallback...");
-                    }
+                    } catch (err) {}
 
-                    // FAIL-SAFE YOUTUBE: Jika API mati, langsung kasih link Bypass agar user tidak stuck di error.
+                    // Fallback YouTube
                     renderResult('YouTube', `YouTube Video (${id})`, [
-                        { label: 'Buka Link Download (Server 1)', url: `https://www.y2mate.com/en/youtube/${id}`, type: 'video' },
-                        { label: 'Buka Link Download (Server 2)', url: `https://yt1s.com/en/youtube-to-mp4?q=${url}`, type: 'video' }
+                        { label: 'Buka Link Download Server 1', url: `https://www.y2mate.com/en/youtube/${id}`, type: 'video', fallback: true }
                     ], thumbUrl);
                     return;
                 }
 
-                // 3. INSTAGRAM ENGINE (Siputzx API + Fail-Safe)
+                // 3. INSTAGRAM ENGINE
                 if (url.includes('instagram.com')) {
                     try {
                         const res = await fetch(`https://api.siputzx.my.id/api/d/ig?url=${encodeURIComponent(url)}`);
@@ -212,43 +246,23 @@
                         
                         if (data.status && data.data && data.data.length > 0) {
                             const downloads = data.data.map((item, index) => ({
-                                label: `Download IG Media ${index + 1}`,
+                                label: `Unduh IG Media ${index + 1} (Otomatis)`,
                                 url: item.url,
-                                type: 'video'
+                                type: 'video',
+                                filename: `Instagram_Media_${index + 1}.mp4`
                             }));
                             renderResult('Instagram', 'Instagram Reels / Post', downloads, 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500');
                             return;
                         }
                     } catch(err) {}
-
-                    // FAIL-SAFE IG
+                    
                     renderResult('Instagram', 'Instagram Media', [
-                        { label: 'Buka Web Download IG Asli', url: `https://snapinsta.app/id`, type: 'video' }
+                        { label: 'Buka Web Download IG', url: `https://snapinsta.app/id`, type: 'video', fallback: true }
                     ], 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500');
                     return;
                 }
 
-                // 4. TWITTER / X ENGINE (VxTwitter)
-                if (url.includes('twitter.com') || url.includes('x.com')) {
-                    const tweetId = url.split('/status/')[1]?.split('?')[0];
-                    if (!tweetId) throw new Error("Link Twitter/X tidak valid.");
-
-                    const res = await fetch(`https://api.vxtwitter.com/Twitter/status/${tweetId}`);
-                    const json = await res.json();
-
-                    const downloads = [];
-                    if (json.media_extended) {
-                        json.media_extended.forEach((m, idx) => {
-                            downloads.push({ label: `Download ${m.type.toUpperCase()} #${idx+1}`, url: m.url, type: m.type === 'video' ? 'video' : 'image' });
-                        });
-                    }
-
-                    if (downloads.length === 0) throw new Error("Tidak ada video/gambar di postingan Twitter ini.");
-                    renderResult('X / Twitter', json.text || 'Twitter Media', downloads, json.media_extended?.[0]?.thumbnail_url || json.media_extended?.[0]?.url);
-                    return;
-                }
-
-                throw new Error("Link belum didukung. Pastikan menggunakan link TikTok, YouTube, IG, atau X.");
+                throw new Error("Link belum didukung. Pastikan menggunakan link TikTok, YouTube, atau IG.");
 
             } catch (err) {
                 statusBox.classList.remove('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40');
@@ -273,17 +287,23 @@
             optionsContainer.innerHTML = '';
 
             options.forEach(opt => {
-                const a = document.createElement('a');
-                a.href = opt.url;
-                a.target = '_blank';
-                a.rel = 'noopener noreferrer';
-                a.className = `px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition-all ${
+                const btn = document.createElement('button');
+                btn.className = `px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
                     opt.type === 'audio' 
                     ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/40' 
                     : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/40'
                 }`;
-                a.innerHTML = `<i class="fa-solid ${opt.type === 'audio' ? 'fa-music' : 'fa-download'}"></i> ${opt.label}`;
-                optionsContainer.appendChild(a);
+                
+                btn.innerHTML = `<i class="fa-solid ${opt.type === 'audio' ? 'fa-music' : 'fa-download'}"></i> ${opt.label}`;
+                
+                // Gunakan forceDownload jika bukan fallback
+                if (opt.fallback) {
+                    btn.onclick = () => window.open(opt.url, '_blank');
+                } else {
+                    btn.onclick = () => forceDownload(opt.url, opt.filename, btn);
+                }
+                
+                optionsContainer.appendChild(btn);
             });
 
             document.getElementById('resultCard').classList.remove('hidden');
