@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // Allow CORS requests
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -66,7 +65,60 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'ID Video YouTube tidak ditemukan dalam link.' });
       }
 
-      // 1. Coba panggil Cobalt API Instance Utama
+      // 1. Try Invidious JSON API v1 for direct formatStreams
+      const invidiousInstances = [
+        'https://inv.hostux.net',
+        'https://invidious.drgns.space',
+        'https://vid.puffyan.us',
+        'https://invidious.nerdvpn.de'
+      ];
+
+      for (const invBase of invidiousInstances) {
+        try {
+          const invRes = await fetch(`${invBase}/api/v1/videos/${ytId}`, {
+            headers: { 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)' }
+          });
+          if (invRes.ok) {
+            const data = await invRes.json();
+            if (data && data.formatStreams && data.formatStreams.length > 0) {
+              const formats = data.formatStreams.map(stream => ({
+                label: `Download Video MP4 (${stream.qualityLabel || 'HD'})`,
+                quality: stream.qualityLabel || 'Direct Stream',
+                ext: stream.container || 'mp4',
+                type: 'video',
+                downloadUrl: stream.url
+              }));
+
+              if (data.adaptiveFormats) {
+                const audioStream = data.adaptiveFormats.find(f => f.type && f.type.includes('audio'));
+                if (audioStream && audioStream.url) {
+                  formats.push({
+                    label: 'Download Audio Track (MP3/M4A)',
+                    quality: 'High Quality Audio',
+                    ext: 'mp3',
+                    type: 'audio',
+                    downloadUrl: audioStream.url
+                  });
+                }
+              }
+
+              return res.status(200).json({
+                status: 'success',
+                platform: 'youtube',
+                title: data.title || `YouTube Video [ID: ${ytId}]`,
+                author: data.author ? `@${data.author}` : '@YouTube',
+                thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
+                previewUrl: formats[0]?.downloadUrl || '',
+                formats: formats
+              });
+            }
+          }
+        } catch (e) {
+          console.warn('Invidious instance fetch attempt error:', e);
+        }
+      }
+
+      // 2. Primary Cobalt Fallback
       try {
         const cobaltRes = await fetch('https://api.cobalt.tools/api/json', {
           method: 'POST',
@@ -80,77 +132,30 @@ export default async function handler(req, res) {
 
         if (cobaltRes.ok) {
           const cData = await cobaltRes.json();
-          if (cData.url) {
+          const streamUrl = cData.url || (cData.picker && cData.picker[0]?.url);
+          if (streamUrl) {
             return res.status(200).json({
               status: 'success',
               platform: 'youtube',
               title: `YouTube Video [ID: ${ytId}]`,
               author: '@YouTube',
               thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
-              previewUrl: cData.url,
+              previewUrl: streamUrl,
               formats: [
                 {
-                  label: 'Download Video MP4 (HD 720p)',
-                  quality: 'Best Direct Quality',
+                  label: 'Download Video MP4 (Direct Stream)',
+                  quality: 'Best Quality',
                   ext: 'mp4',
                   type: 'video',
-                  downloadUrl: cData.url
+                  downloadUrl: streamUrl
                 }
               ]
             });
           }
         }
       } catch (e) {
-        console.warn('Cobalt API primary fallback triggered:', e);
+        console.warn('Cobalt API fallback error:', e);
       }
-
-      // 2. Fallback Invidious Stream Node dengan ITAG spesifik yang BENAR
-      // itag=22 -> 720p MP4 (Video + Audio)
-      // itag=18 -> 360p MP4 (Video + Audio)
-      // itag=140 -> M4A/MP3 Audio Track
-      const invidiousInstances = [
-        'https://inv.hostux.net',
-        'https://invidious.drgns.space',
-        'https://vid.puffyan.us'
-      ];
-
-      const invBase = invidiousInstances[Math.floor(Math.random() * invidiousInstances.length)];
-
-      const hdVideoUrl = `${invBase}/latest_version?id=${ytId}&itag=22`;
-      const sdVideoUrl = `${invBase}/latest_version?id=${ytId}&itag=18`;
-      const audioUrl = `${invBase}/latest_version?id=${ytId}&itag=140`;
-
-      return res.status(200).json({
-        status: 'success',
-        platform: 'youtube',
-        title: `YouTube Video [ID: ${ytId}]`,
-        author: '@YouTube',
-        thumbnail: `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`,
-        previewUrl: sdVideoUrl,
-        formats: [
-          {
-            label: 'Download Video MP4 (HD 720p Direct)',
-            quality: '720p HD Stream',
-            ext: 'mp4',
-            type: 'video',
-            downloadUrl: hdVideoUrl
-          },
-          {
-            label: 'Download Video MP4 (SD 360p Direct)',
-            quality: '360p Medium Stream',
-            ext: 'mp4',
-            type: 'video',
-            downloadUrl: sdVideoUrl
-          },
-          {
-            label: 'Download Audio Track (MP3/M4A)',
-            quality: '320 kbps High Quality',
-            ext: 'mp3',
-            type: 'audio',
-            downloadUrl: audioUrl
-          }
-        ]
-      });
     }
 
     if (lowerUrl.includes('twitter.com') || lowerUrl.includes('x.com')) {
