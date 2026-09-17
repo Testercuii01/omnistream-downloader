@@ -6,7 +6,392 @@
   <title>OmniStream - Universal Multi-Platform Direct Downloader</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    @import url('http<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniStream - Universal Media Downloader Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(15, 23, 42, 0.92);
+      --card-border: rgba(255, 255, 255, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.25) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.25) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.18) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: #f3f4f6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .glass-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+    }
+
+    .glass-input {
+      background: rgba(3, 7, 18, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-input:focus-within {
+      border-color: #a855f7;
+      box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+    }
+
+    .btn-gradient {
+      background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #db2777 100%);
+      background-size: 200% 200%;
+      transition: all 0.3s ease;
+    }
+
+    .btn-gradient:hover {
+      background-position: right center;
+      box-shadow: 0 10px 25px rgba(192, 38, 211, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .spinner {
+      border: 3px solid rgba(255, 255, 255, 0.2);
+      border-top: 3px solid #ffffff;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body class="selection:bg-purple-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-lg sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 p-0.5 shadow-lg shadow-purple-500/30">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+        </div>
+        <div>
+          <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+            OmniStream
+          </span>
+          <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            PRO BETA v0.7
+          </span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full font-medium">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>Vercel Native Stream Active</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-10 sm:py-14 flex-grow w-full relative z-10">
+    
+    <div class="text-center space-y-4 mb-8">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-purple-300 font-medium">
+        <span>⚡ Real Direct Media Downloader (Tanpa Iklan / No Redirect)</span>
+      </div>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
+        Universal Media Extractor <br>
+        <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
+          YouTube, TikTok, Instagram & X/Twitter
+        </span>
+      </h1>
+      <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
+        Tempelkan link publik di bawah. Server Vercel mengekstrak file video/audio asli lalu mengunduhnya langsung via browser kamu tanpa dialihkan ke web spam.
+      </p>
+    </div>
+
+    <!-- Input Box -->
+    <div class="glass-panel p-4 sm:p-6 rounded-3xl space-y-5 mb-8">
+      <div class="flex flex-col sm:flex-row gap-3">
+        <div class="glass-input relative flex-grow rounded-2xl flex items-center px-4 py-1">
+          <svg class="w-5 h-5 text-purple-400 shrink-0 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
+          </svg>
+          <input 
+            type="text" 
+            id="urlInput"
+            oninput="detectPlatform()"
+            placeholder="Paste link TikTok, YouTube, Instagram, atau Twitter..." 
+            class="w-full py-3.5 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none text-sm sm:text-base"
+          />
+        </div>
+
+        <button 
+          onclick="processDownload()" 
+          id="btnFetch"
+          class="btn-gradient px-8 py-4 rounded-2xl font-bold text-sm text-white flex items-center justify-center gap-2 shrink-0 shadow-lg cursor-pointer"
+        >
+          <div id="btnIconWrapper" class="flex items-center gap-2">
+            <svg id="btnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+            </svg>
+            <span id="btnText">Ekstrak File</span>
+          </div>
+        </button>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-800/80 text-xs">
+        <div class="flex items-center gap-2 text-slate-400">
+          <span>Platform:</span>
+          <span id="platformBadge" class="px-3 py-1 rounded-full font-semibold bg-slate-800 text-slate-300 border border-slate-700">
+            Otomat / Menunggu Link
+          </span>
+        </div>
+
+        <div class="flex items-center gap-3 text-slate-400 font-medium">
+          <span class="hover:text-red-400 transition cursor-pointer" onclick="usePreset('https://youtu.be/0I0QZ2CK5hw')">YouTube Test</span> •
+          <span class="hover:text-cyan-400 transition cursor-pointer" onclick="usePreset('https://www.tiktok.com/@tiktok/video/7106594312292453678')">TikTok (No WM)</span> •
+          <span class="hover:text-pink-400 transition cursor-pointer" onclick="usePreset('https://www.instagram.com/reel/Cz1894xLq9/')">Instagram</span> •
+          <span class="hover:text-blue-400 transition cursor-pointer" onclick="usePreset('https://twitter.com/X/status/1726000000000000000')">X / Twitter</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="statusBox" class="hidden mb-8 p-4 rounded-2xl text-sm border text-center font-medium transition-all"></div>
+
+    <!-- Result Card -->
+    <div id="resultCard" class="hidden glass-panel p-6 sm:p-8 rounded-3xl space-y-6">
+      <div class="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+        <div class="w-full sm:w-64 shrink-0 space-y-2">
+          <div class="w-full h-44 rounded-2xl bg-slate-950 border border-slate-800 overflow-hidden relative flex items-center justify-center shadow-inner">
+            <img id="resThumb" src="" alt="Media Thumbnail" class="w-full h-full object-cover hidden">
+            <video id="resVideoPreview" controls class="w-full h-full object-cover hidden"></video>
+            <div id="resPlaceholder" class="flex flex-col items-center gap-2 text-slate-500">
+              <svg class="w-10 h-10 text-purple-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+              </svg>
+              <span class="text-xs">Media Siap Unduh</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-3 text-center sm:text-left flex-grow">
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+            <span id="resBadgeType" class="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              Stream Direct Verified
+            </span>
+            <span id="resAuthor" class="text-xs text-slate-400">@creator</span>
+          </div>
+
+          <h2 id="resTitle" class="text-lg sm:text-xl font-bold text-white leading-snug line-clamp-2">
+            Judul Media Berhasil Diekstrak
+          </h2>
+
+          <p class="text-xs text-slate-400">
+            Pilih format di bawah. Pengunduhan akan langsung <b class="text-emerald-400">diproses oleh Download Manager browser kamu</b>.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-4 border-t border-slate-800/80 space-y-3">
+        <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">
+          📥 Pilih Format Unduhan Langsung:
+        </h3>
+        <div id="formatButtonsList" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="w-full border-t border-slate-900/80 py-6 text-center text-xs text-slate-500 relative z-10">
+    <p>OmniStream Universal Engine &copy; 2026 — Multi-Platform Direct Media Extractor (PRO BETA v0.7)</p>
+  </footer>
+
+  <script>
+    function showStatus(message, type = 'info') {
+      const statusBox = document.getElementById('statusBox');
+      statusBox.classList.remove('hidden', 'bg-red-500/10', 'border-red-500/30', 'text-red-400', 'bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400', 'bg-blue-500/10', 'border-blue-500/30', 'text-blue-400');
+      
+      if (type === 'error') {
+        statusBox.classList.add('bg-red-500/10', 'border-red-500/30', 'text-red-400');
+      } else if (type === 'success') {
+        statusBox.classList.add('bg-emerald-500/10', 'border-emerald-500/30', 'text-emerald-400');
+      } else {
+        statusBox.classList.add('bg-blue-500/10', 'border-blue-500/30', 'text-blue-400');
+      }
+
+      statusBox.innerText = message;
+    }
+
+    function detectPlatform() {
+      const url = document.getElementById('urlInput').value.trim().toLowerCase();
+      const badge = document.getElementById('platformBadge');
+
+      if (url.includes('tiktok.com')) {
+        badge.innerHTML = `<span class="text-cyan-400 font-bold">TikTok Video</span>`;
+        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20";
+      } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        badge.innerHTML = `<span class="text-red-400 font-bold">YouTube Media</span>`;
+        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20";
+      } else if (url.includes('instagram.com')) {
+        badge.innerHTML = `<span class="text-pink-400 font-bold">Instagram Post/Reel</span>`;
+        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20";
+      } else if (url.includes('twitter.com') || url.includes('x.com')) {
+        badge.innerHTML = `<span class="text-blue-400 font-bold">X / Twitter</span>`;
+        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-400/20";
+      } else {
+        badge.innerText = "Otomat / Menunggu Link";
+        badge.className = "px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-300 border border-slate-700";
+      }
+    }
+
+    function usePreset(url) {
+      document.getElementById('urlInput').value = url;
+      detectPlatform();
+      processDownload();
+    }
+
+    async function processDownload() {
+      const urlInput = document.getElementById('urlInput').value.trim();
+      const btnFetch = document.getElementById('btnFetch');
+      const btnText = document.getElementById('btnText');
+      const btnIconWrapper = document.getElementById('btnIconWrapper');
+      const statusBox = document.getElementById('statusBox');
+      const resultCard = document.getElementById('resultCard');
+
+      if (!urlInput) {
+        showStatus('Harap masukkan URL atau paste link media terlebih dahulu!', 'error');
+        return;
+      }
+
+      statusBox.classList.add('hidden');
+      resultCard.classList.add('hidden');
+      btnFetch.disabled = true;
+      btnFetch.style.opacity = '0.7';
+      btnText.innerText = 'Mengekstrak...';
+      btnIconWrapper.innerHTML = `<div class="spinner mr-2"></div><span>Mengekstrak...</span>`;
+
+      showStatus('Mengekstrak stream media via Vercel Backend Server...', 'info');
+
+      try {
+        const apiResponse = await fetch(`/api/extract?url=${encodeURIComponent(urlInput)}`, {
+          method: 'GET',
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (apiResponse.ok) {
+          const data = await apiResponse.json();
+          if (data && data.formats && data.formats.length > 0) {
+            document.getElementById('resTitle').innerText = data.title || 'Media Terdeteksi';
+            document.getElementById('resAuthor').innerText = data.author || '@creator';
+
+            const resThumb = document.getElementById('resThumb');
+            const resVideoPreview = document.getElementById('resVideoPreview');
+            const resPlaceholder = document.getElementById('resPlaceholder');
+
+            if (data.previewUrl && data.previewUrl.startsWith('http')) {
+              resVideoPreview.src = data.previewUrl;
+              resVideoPreview.classList.remove('hidden');
+              resThumb.classList.add('hidden');
+              resPlaceholder.classList.add('hidden');
+            } else if (data.thumbnail) {
+              resThumb.src = data.thumbnail;
+              resThumb.classList.remove('hidden');
+              resVideoPreview.classList.add('hidden');
+              resPlaceholder.classList.add('hidden');
+            } else {
+              resThumb.classList.add('hidden');
+              resVideoPreview.classList.add('hidden');
+              resPlaceholder.classList.remove('hidden');
+            }
+
+            const btnContainer = document.getElementById('formatButtonsList');
+            btnContainer.innerHTML = '';
+
+            data.formats.forEach((opt, i) => {
+              const safeName = `${(data.title || 'omnistream').slice(0, 25).replace(/[^a-z0-9]/gi, '_')}_${i + 1}.${opt.ext}`;
+              const downloadProxyUrl = `/api/download?url=${encodeURIComponent(opt.downloadUrl)}&filename=${encodeURIComponent(safeName)}`;
+
+              const btn = document.createElement('a');
+              btn.href = downloadProxyUrl;
+              btn.download = safeName;
+              btn.className = "p-3.5 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 rounded-2xl flex items-center justify-between text-left transition group cursor-pointer no-underline";
+
+              btn.innerHTML = `
+                <div class="flex items-center gap-3 truncate">
+                  <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                  </div>
+                  <div class="truncate">
+                    <div class="font-bold text-sm text-slate-100 truncate">${opt.label}</div>
+                    <div class="text-xs text-slate-400">${opt.quality} • ${opt.ext.toUpperCase()}</div>
+                  </div>
+                </div>
+                <span class="px-3.5 py-1.5 bg-emerald-600 group-hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shrink-0 shadow-md">
+                  Unduh .${opt.ext}
+                </span>
+              `;
+
+              btnContainer.appendChild(btn);
+            });
+
+            resultCard.classList.remove('hidden');
+            showStatus('Media berhasil diekstrak! Klik tombol hijau di bawah untuk mengunduh.', 'success');
+          } else {
+            showStatus('Gagal mengekstrak media. Pastikan link publik atau coba link lain.', 'error');
+          }
+        } else {
+          showStatus('Server backend tidak merespon. Pastikan folder api/ sudah di-commit di GitHub.', 'error');
+        }
+      } catch (err) {
+        console.error('Extraction catch:', err);
+        showStatus('Gagal terhubung ke server backend Vercel.', 'error');
+      } finally {
+        btnFetch.disabled = false;
+        btnFetch.style.opacity = '1';
+        btnIconWrapper.innerHTML = `
+          <svg id="btnIcon" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          <span id="btnText">Ekstrak File</span>
+        `;
+      }
+    }
+  </script>
+</body>
+</html>s://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
     :root {
       --bg-dark: #030712;
