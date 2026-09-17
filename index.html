@@ -297,71 +297,73 @@
           headers: { 'Accept': 'application/json' }
         });
 
-        if (apiResponse.ok) {
-          const data = await apiResponse.json();
-          if (data && data.formats && data.formats.length > 0) {
-            document.getElementById('resTitle').innerText = data.title || 'Media Terdeteksi';
-            document.getElementById('resAuthor').innerText = data.author || '@creator';
+        if (apiResponse.status === 404) {
+          showStatus('Error 404: Endpoint /api/extract tidak ditemukan. Pastikan file berada di folder api/extract.js di GitHub.', 'error');
+          return;
+        }
 
-            const resThumb = document.getElementById('resThumb');
-            const resVideoPreview = document.getElementById('resVideoPreview');
-            const resPlaceholder = document.getElementById('resPlaceholder');
+        const data = await apiResponse.json();
 
-            if (data.previewUrl && data.previewUrl.startsWith('http')) {
-              resVideoPreview.src = data.previewUrl;
-              resVideoPreview.classList.remove('hidden');
-              resThumb.classList.add('hidden');
-              resPlaceholder.classList.add('hidden');
-            } else if (data.thumbnail) {
-              resThumb.src = data.thumbnail;
-              resThumb.classList.remove('hidden');
-              resVideoPreview.classList.add('hidden');
-              resPlaceholder.classList.add('hidden');
-            } else {
-              resThumb.classList.add('hidden');
-              resVideoPreview.classList.add('hidden');
-              resPlaceholder.classList.remove('hidden');
-            }
+        if (data && data.status === 'success' && data.formats && data.formats.length > 0) {
+          document.getElementById('resTitle').innerText = data.title || 'Media Terdeteksi';
+          document.getElementById('resAuthor').innerText = data.author || '@creator';
 
-            const btnContainer = document.getElementById('formatButtonsList');
-            btnContainer.innerHTML = '';
+          const resThumb = document.getElementById('resThumb');
+          const resVideoPreview = document.getElementById('resVideoPreview');
+          const resPlaceholder = document.getElementById('resPlaceholder');
 
-            data.formats.forEach((opt, i) => {
-              const safeName = `${(data.title || 'omnistream').slice(0, 25).replace(/[^a-z0-9]/gi, '_')}_${i + 1}.${opt.ext}`;
-              const downloadProxyUrl = `/api/download?url=${encodeURIComponent(opt.downloadUrl)}&filename=${encodeURIComponent(safeName)}`;
-
-              const btn = document.createElement('a');
-              btn.href = downloadProxyUrl;
-              btn.download = safeName;
-              btn.className = "p-3.5 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 rounded-2xl flex items-center justify-between text-left transition group cursor-pointer no-underline";
-
-              btn.innerHTML = `
-                <div class="flex items-center gap-3 truncate">
-                  <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-                    </svg>
-                  </div>
-                  <div class="truncate">
-                    <div class="font-bold text-sm text-slate-100 truncate">${opt.label}</div>
-                    <div class="text-xs text-slate-400">${opt.quality} • ${opt.ext.toUpperCase()}</div>
-                  </div>
-                </div>
-                <span class="px-3.5 py-1.5 bg-emerald-600 group-hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shrink-0 shadow-md">
-                  Unduh .${opt.ext}
-                </span>
-              `;
-
-              btnContainer.appendChild(btn);
-            });
-
-            resultCard.classList.remove('hidden');
-            showStatus('Media berhasil diekstrak! Klik tombol hijau di bawah untuk mengunduh.', 'success');
+          if (data.previewUrl && data.previewUrl.startsWith('http')) {
+            resVideoPreview.src = data.previewUrl;
+            resVideoPreview.classList.remove('hidden');
+            resThumb.classList.add('hidden');
+            resPlaceholder.classList.add('hidden');
+          } else if (data.thumbnail) {
+            resThumb.src = data.thumbnail;
+            resThumb.classList.remove('hidden');
+            resVideoPreview.classList.add('hidden');
+            resPlaceholder.classList.add('hidden');
           } else {
-            showStatus('Gagal mengekstrak media. Pastikan link publik atau coba link lain.', 'error');
+            resThumb.classList.add('hidden');
+            resVideoPreview.classList.add('hidden');
+            resPlaceholder.classList.remove('hidden');
           }
+
+          const btnContainer = document.getElementById('formatButtonsList');
+          btnContainer.innerHTML = '';
+
+          data.formats.forEach((opt, i) => {
+            const safeName = `${(data.title || 'omnistream').slice(0, 25).replace(/[^a-z0-9]/gi, '_')}_${i + 1}.${opt.ext}`;
+            const downloadProxyUrl = `/api/download?url=${encodeURIComponent(opt.downloadUrl)}&filename=${encodeURIComponent(safeName)}`;
+
+            const btn = document.createElement('a');
+            btn.href = downloadProxyUrl;
+            btn.download = safeName;
+            btn.className = "p-3.5 bg-slate-900/90 hover:bg-slate-800 border border-slate-800 hover:border-emerald-500/50 rounded-2xl flex items-center justify-between text-left transition group cursor-pointer no-underline";
+
+            btn.innerHTML = `
+              <div class="flex items-center gap-3 truncate">
+                <div class="p-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 shrink-0">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                  </svg>
+                </div>
+                <div class="truncate">
+                  <div class="font-bold text-sm text-slate-100 truncate">${opt.label}</div>
+                  <div class="text-xs text-slate-400">${opt.quality} • ${opt.ext.toUpperCase()}</div>
+                </div>
+              </div>
+              <span class="px-3.5 py-1.5 bg-emerald-600 group-hover:bg-emerald-500 text-white rounded-xl text-xs font-bold shrink-0 shadow-md">
+                Unduh .${opt.ext}
+              </span>
+            `;
+
+            btnContainer.appendChild(btn);
+          });
+
+          resultCard.classList.remove('hidden');
+          showStatus('Media berhasil diekstrak! Klik tombol hijau di bawah untuk mengunduh.', 'success');
         } else {
-          showStatus('Server backend tidak merespon. Pastikan folder api/ sudah di-commit di GitHub.', 'error');
+          showStatus(data.error || 'Gagal mengekstrak media dari link ini. Coba link lain.', 'error');
         }
       } catch (err) {
         console.error('Extraction catch:', err);
