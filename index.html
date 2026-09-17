@@ -10,7 +10,7 @@
 
     :root {
       --bg-dark: #030712;
-      --card-bg: rgba(15, 23, 42, 0.85);
+      --card-bg: rgba(15, 23, 42, 0.88);
       --card-border: rgba(255, 255, 255, 0.12);
     }
 
@@ -114,14 +114,14 @@
             OmniStream
           </span>
           <span class="ml-2 text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
-            PRO REAL v5.0
+            PRO BETA v0.6
           </span>
         </div>
       </div>
 
       <div class="flex items-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1.5 rounded-full font-medium">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span>Ultra-Fast Engine Active</span>
+        <span>Real Direct Stream Active</span>
       </div>
     </div>
   </header>
@@ -131,16 +131,16 @@
     
     <div class="text-center space-y-4 mb-8">
       <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-purple-300 font-medium">
-        <span>⚡ Unduh Video, Musik & Foto Langsung Ke HP / Laptop</span>
+        <span>⚡ Direct Downloader (Tanpa Iklan / Redirect Spam)</span>
       </div>
       <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white leading-tight">
-        Direct Media Extractor <br>
+        Universal Media Extractor <br>
         <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">
           YouTube, TikTok, Instagram & X/Twitter
         </span>
       </h1>
       <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto">
-        Tempelkan link video/audio publik di bawah. Sistem akan memproses dan mengunduh file media langsung ke memori galeri atau folder penyimpanan kamu.
+        Tempelkan link publik di bawah ini. Sistem mengekstrak stream video/audio asli tanpa mengalihkan kamu ke website spam.
       </p>
     </div>
 
@@ -213,7 +213,7 @@
         <div class="space-y-3 text-center sm:text-left flex-grow">
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
             <span id="resBadgeType" class="px-3 py-1 rounded-full text-xs font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">
-              File Media Terverifikasi
+              File Stream Terverifikasi
             </span>
             <span id="resAuthor" class="text-xs text-slate-400">@creator</span>
           </div>
@@ -223,7 +223,7 @@
           </h2>
 
           <p class="text-xs text-slate-400">
-            Klik opsi format hijau di bawah. File akan <b class="text-emerald-400">langsung tersimpan di memori perangkat kamu</b> tanpa kuis atau iklan.
+            Klik tombol unduh di bawah ini. File media akan <b class="text-emerald-400">langsung terunduh ke perangkat kamu</b>.
           </p>
 
           <div class="pt-2 flex flex-wrap gap-2 justify-center sm:justify-start">
@@ -250,7 +250,7 @@
   </main>
 
   <footer class="w-full border-t border-slate-900/80 py-6 text-center text-xs text-slate-500 relative z-10">
-    <p>OmniStream Universal Engine &copy; 2026 — Multi-Platform Direct Media Extractor</p>
+    <p>OmniStream Universal Engine &copy; 2026 — Multi-Platform Direct Media Extractor (PRO BETA v0.6)</p>
   </footer>
 
   <!-- Script Engine Logic -->
@@ -303,8 +303,8 @@
       return match ? match[1] : null;
     }
 
-    // Helper fetch with strict timeout (prevents hanging)
-    async function fetchWithTimeout(resource, options = {}, timeoutMs = 3500) {
+    // Helper fetch with strict timeout
+    async function fetchWithTimeout(resource, options = {}, timeoutMs = 4000) {
       const controller = new AbortController();
       const id = setTimeout(() => controller.abort(), timeoutMs);
       try {
@@ -340,7 +340,7 @@
       btnText.innerText = 'Mengekstrak...';
       btnIconWrapper.innerHTML = `<div class="spinner mr-2"></div><span>Mengekstrak...</span>`;
 
-      showStatus('Menghubungkan ke server extractor super cepat...', 'info');
+      showStatus('Mengekstrak stream media asli dari server...', 'info');
 
       let options = [];
       let title = "Media Terdeteksi";
@@ -351,11 +351,11 @@
       const lowerUrl = urlInput.toLowerCase();
 
       try {
-        // ENGINE 1: TIKTOK (TikWM Engine)
+        // ENGINE 1: TIKTOK (TikWM Engine - 100% Direct Media Links)
         if (lowerUrl.includes('tiktok.com')) {
-          showStatus('Mengekstrak media dari server TikTok...', 'info');
+          showStatus('Mengekstrak media dari server TikTok (TikWM)...', 'info');
           try {
-            const res = await fetchWithTimeout(`https://www.tikwm.com/api/?url=${encodeURIComponent(urlInput)}`, {}, 4000);
+            const res = await fetchWithTimeout(`https://www.tikwm.com/api/?url=${encodeURIComponent(urlInput)}`, {}, 5000);
             if (res.ok) {
               const tikData = await res.json();
               if (tikData && tikData.data) {
@@ -373,9 +373,19 @@
                   url: d.play
                 });
 
+                if (d.hdplay) {
+                  options.push({
+                    label: "Download Video MP4 (Ultra HD)",
+                    quality: "Full HD",
+                    type: "video",
+                    ext: "mp4",
+                    url: d.hdplay
+                  });
+                }
+
                 if (d.music) {
                   options.push({
-                    label: "Download Audio MP3 (Musik Asli)",
+                    label: "Download Audio MP3 (Musik Original)",
                     quality: "320 kbps",
                     type: "audio",
                     ext: "mp3",
@@ -385,91 +395,130 @@
               }
             }
           } catch (err) {
-            console.warn('TikWM timeout/error:', err);
+            console.warn('TikWM error:', err);
           }
         }
 
-        // ENGINE 2: YOUTUBE (Multi-Node Piped & Invidious with Strict Timeouts + Fast Fallback Generator)
+        // ENGINE 2: YOUTUBE (Cobalt API + Piped Public Nodes - Direct Streams)
         if (options.length === 0 && (lowerUrl.includes('youtube.com') || lowerUrl.includes('youtu.be'))) {
           const ytId = getYouTubeId(urlInput);
 
           if (ytId) {
-            showStatus(`YouTube ID [${ytId}] terdeteksi, mengekstrak format stream...`, 'info');
+            showStatus(`YouTube Video [${ytId}] terdeteksi, mengekstrak direct stream...`, 'info');
             thumb = `https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`;
 
-            // Try fast Piped node
-            const pipedNodes = [
-              `https://pipedapi.kavin.rocks/streams/${ytId}`,
-              `https://api.piped.video/streams/${ytId}`
+            // Try Cobalt API Public Instance first
+            const cobaltInstances = [
+              'https://api.cobalt.tools/api/json',
+              'https://co.wuk.sh/api/json'
             ];
 
-            for (const nodeUrl of pipedNodes) {
+            for (const cApi of cobaltInstances) {
               try {
-                const res = await fetchWithTimeout(nodeUrl, {}, 2500);
-                if (res.ok) {
-                  const pData = await res.json();
-                  title = pData.title || `YouTube Video [${ytId}]`;
-                  author = pData.uploader || "YouTube Channel";
-                  if (pData.thumbnailUrl) thumb = pData.thumbnailUrl;
+                const cRes = await fetchWithTimeout(cApi, {
+                  method: 'POST',
+                  headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ url: urlInput, videoQuality: '720', youtubeVideoCodec: 'h264' })
+                }, 3500);
 
-                  if (pData.videoStreams && pData.videoStreams.length > 0) {
-                    const mp4Streams = pData.videoStreams.filter(s => s.mimeType && s.mimeType.includes('mp4'));
-                    const targetList = mp4Streams.length > 0 ? mp4Streams : pData.videoStreams;
+                if (cRes.ok) {
+                  const cData = await cRes.json();
+                  if (cData.url) {
+                    title = `YouTube Video [${ytId}]`;
+                    author = "@YouTube";
+                    previewVideoUrl = cData.url;
 
-                    targetList.slice(0, 3).forEach((s) => {
-                      options.push({
-                        label: `Download Video MP4 (${s.quality || '720p HD'})`,
-                        quality: s.quality || 'HD High Res',
-                        type: 'video',
-                        ext: 'mp4',
-                        url: s.url
-                      });
-                    });
-                    if (options.length > 0) previewVideoUrl = options[0].url;
-                  }
-
-                  if (pData.audioStreams && pData.audioStreams.length > 0) {
                     options.push({
-                      label: "Download Audio MP3 (Lagu/Suara Original)",
-                      quality: "320 kbps HQ",
-                      type: "audio",
-                      ext: "mp3",
-                      url: pData.audioStreams[0].url
+                      label: "Download Direct Video MP4 (HD Stream)",
+                      quality: "720p HD Direct",
+                      type: "video",
+                      ext: "mp4",
+                      url: cData.url
                     });
+                    break;
                   }
-
-                  if (options.length > 0) break;
                 }
-              } catch (err) {
-                console.warn('Piped node quick skip:', err);
+              } catch (e) {
+                console.warn('Cobalt instance error:', e);
               }
             }
 
-            // High Compatibility Instant Fallback Generator if external node blocks CORS
+            // Try Piped API nodes if Cobalt is busy
+            if (options.length === 0) {
+              const pipedNodes = [
+                `https://pipedapi.kavin.rocks/streams/${ytId}`,
+                `https://api.piped.video/streams/${ytId}`
+              ];
+
+              for (const nodeUrl of pipedNodes) {
+                try {
+                  const pRes = await fetchWithTimeout(nodeUrl, {}, 3000);
+                  if (pRes.ok) {
+                    const pData = await pRes.json();
+                    title = pData.title || `YouTube Video [${ytId}]`;
+                    author = pData.uploader || "@YouTube";
+                    if (pData.thumbnailUrl) thumb = pData.thumbnailUrl;
+
+                    if (pData.videoStreams && pData.videoStreams.length > 0) {
+                      const mp4Streams = pData.videoStreams.filter(s => s.mimeType && s.mimeType.includes('mp4'));
+                      const targetList = mp4Streams.length > 0 ? mp4Streams : pData.videoStreams;
+
+                      targetList.slice(0, 2).forEach((s) => {
+                        options.push({
+                          label: `Download Video MP4 (${s.quality || '720p'})`,
+                          quality: s.quality || 'HD Stream',
+                          type: 'video',
+                          ext: 'mp4',
+                          url: s.url
+                        });
+                      });
+                      if (options.length > 0) previewVideoUrl = options[0].url;
+                    }
+
+                    if (pData.audioStreams && pData.audioStreams.length > 0) {
+                      options.push({
+                        label: "Download Audio MP3 / M4A",
+                        quality: "High Quality Audio",
+                        type: "audio",
+                        ext: "mp3",
+                        url: pData.audioStreams[0].url
+                      });
+                    }
+
+                    if (options.length > 0) break;
+                  }
+                } catch (e) {
+                  console.warn('Piped node error:', e);
+                }
+              }
+            }
+
+            // High Compatibility Fallback if CORS prevents direct stream fetching
             if (options.length === 0) {
               title = `YouTube Video [ID: ${ytId}]`;
               author = "@YouTube";
 
+              // Direct YouTube Audio / Video stream helper link
               options.push({
-                label: "Download Direct Video MP4 (Fast Stream)",
-                quality: "1080p / 720p HD",
+                label: "Download Direct Video MP4 (HQ)",
+                quality: "HD Stream",
                 type: "video",
                 ext: "mp4",
-                url: `https://y2mate.is/vi/?v=${ytId}`
+                url: `https://invidious.nerdvpn.de/latest_version?id=${ytId}&italic=0&v=mp4`
               });
 
               options.push({
-                label: "Ekstrak Lagu / Audio MP3 (320kbps)",
+                label: "Ekstrak Audio Track MP3",
                 quality: "320 kbps",
                 type: "audio",
                 ext: "mp3",
-                url: `https://y2mate.is/vi/?v=${ytId}`
+                url: `https://invidious.nerdvpn.de/latest_version?id=${ytId}&italic=0&audio=1`
               });
             }
           }
         }
 
-        // ENGINE 3: TWITTER / X (VxTwitter)
+        // ENGINE 3: TWITTER / X (VxTwitter API)
         if (options.length === 0 && (lowerUrl.includes('twitter.com') || lowerUrl.includes('x.com'))) {
           showStatus('Mengekstrak postingan X / Twitter...', 'info');
           const tweetMatch = urlInput.match(/(?:twitter\.com|x\.com)\/(?:[^\/]+)\/status\/(\d+)/i);
@@ -477,7 +526,7 @@
 
           if (tweetId) {
             try {
-              const vxRes = await fetchWithTimeout(`https://api.vxtwitter.com/status/${tweetId}`, {}, 3000);
+              const vxRes = await fetchWithTimeout(`https://api.vxtwitter.com/status/${tweetId}`, {}, 4000);
               if (vxRes.ok) {
                 const vxData = await vxRes.json();
                 title = vxData.text || "X / Twitter Post";
@@ -488,7 +537,7 @@
                     if (m.type === 'video' || m.type === 'gif') {
                       options.push({
                         label: `Download Video MP4 (${m.type.toUpperCase()})`,
-                        quality: "HD Original",
+                        quality: "HD Direct Stream",
                         type: "video",
                         ext: "mp4",
                         url: m.url
@@ -497,7 +546,7 @@
                     } else if (m.type === 'image') {
                       options.push({
                         label: `Download Foto HD (${idx + 1})`,
-                        quality: "High Res",
+                        quality: "High Res JPG",
                         type: "image",
                         ext: "jpg",
                         url: m.url
@@ -513,7 +562,7 @@
           }
         }
 
-        // ENGINE 4: INSTAGRAM (Cobalt API with Strict Timeout & Proxy Fallback)
+        // ENGINE 4: INSTAGRAM (Cobalt API Engine)
         if (options.length === 0 && lowerUrl.includes('instagram.com')) {
           showStatus('Mengekstrak Instagram Post / Reel...', 'info');
           try {
@@ -521,17 +570,17 @@
               method: 'POST',
               headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
               body: JSON.stringify({ url: urlInput, videoQuality: '1080' })
-            }, 3000);
+            }, 4000);
 
             if (res.ok) {
               const cData = await res.json();
               if (cData.url || (cData.picker && cData.picker.length > 0)) {
                 const mediaUrl = cData.url || cData.picker[0].url;
                 previewVideoUrl = mediaUrl;
-                title = "Instagram Media Reel/Post HD";
+                title = "Instagram Media Reel / Post HD";
 
                 options.push({
-                  label: "Download Video Reel / Post (HD)",
+                  label: "Download Direct Media (HD MP4)",
                   quality: "HD Original",
                   type: "video",
                   ext: "mp4",
@@ -541,17 +590,6 @@
             }
           } catch (err) {
             console.warn('Cobalt IG timeout:', err);
-          }
-
-          if (options.length === 0) {
-            title = "Instagram Media Extracted";
-            options.push({
-              label: "Download Video Reel / Post (Direct Stream)",
-              quality: "HD Original",
-              type: "video",
-              ext: "mp4",
-              url: urlInput
-            });
           }
         }
 
@@ -618,7 +656,6 @@
         console.error('Extraction catch:', err);
         showStatus('Gagal terhubung ke server extractor. Coba lagi.', 'error');
       } finally {
-        // GUARANTEED RESET OF LOADING ANIMATION
         btnFetch.disabled = false;
         btnFetch.style.opacity = '1';
         btnIconWrapper.innerHTML = `
@@ -634,8 +671,9 @@
       showStatus('Mengunduh file langsung ke perangkat kamu...', 'info');
 
       try {
-        const response = await fetchWithTimeout(fileUrl, {}, 5000);
-        if (!response.ok) throw new Error('Blob fetch blocked');
+        // Attempt Blob Download first for direct file save
+        const response = await fetchWithTimeout(fileUrl, {}, 8000);
+        if (!response.ok) throw new Error('Blob fetch blocked by CORS');
 
         const blob = await response.blob();
         const blobUrl = URL.createObjectURL(blob);
@@ -646,11 +684,13 @@
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
-        URL.revokeObjectURL(blobUrl);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
 
-        showStatus('File berhasil diunduh dan tersimpan di perangkat kamu!', 'success');
+        showStatus('File berhasil diunduh dan tersimpan di memori perangkat kamu!', 'success');
       } catch (err) {
-        // Fallback: Direct download trigger window link
+        console.warn('Direct blob fetch failed, falling back to direct stream link:', err);
+
+        // Fallback: Trigger direct browser download stream
         const a = document.createElement('a');
         a.href = fileUrl;
         a.download = defaultFileName || `omnistream_file.${fileExt}`;
@@ -660,7 +700,7 @@
         a.click();
         document.body.removeChild(a);
 
-        showStatus('Pengunduhan dimulai!', 'success');
+        showStatus('Pengunduhan stream dimulai langsung!', 'success');
       }
     }
 
