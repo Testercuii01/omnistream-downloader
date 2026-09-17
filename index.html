@@ -64,11 +64,11 @@
                 <i class="fa-solid fa-bolt"></i>
             </div>
             <span class="text-2xl font-extrabold tracking-tight text-white">OmniStream</span>
-            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">v1.3 AUTO-SAVE</span>
+            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">v1.4 AUTO-SAVE PRO</span>
         </div>
         <div class="hidden sm:flex items-center gap-2 text-xs bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            Direct Blob Download Active
+            Cobalt Anti-CORS Active
         </div>
     </header>
 
@@ -82,7 +82,7 @@
                 Universal Media Downloader
             </h1>
             <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
-                Tempelkan link dari TikTok, YouTube, Instagram, atau X/Twitter. File akan diunduh langsung ke galeri/HP tanpa membuka tab iklan.
+                Tempelkan link dari TikTok, YouTube, Instagram, atau X/Twitter. File akan diunduh secara langsung dan otomatis.
             </p>
         </div>
 
@@ -130,50 +130,81 @@
     </main>
 
     <footer class="text-center text-xs text-gray-500 py-4">
-        OmniStream v1.3 Auto-Save Engine
+        OmniStream v1.4 PRO Anti-CORS Engine
     </footer>
 
     <script>
-        // FUNGSI UNTUK MENGUNDUH LANGSUNG TANPA PINDAH TAB
+        // CORE DOWNLOADER: Otomatis Sedot Blob Tanpa Pindah Tab
         async function forceDownload(url, filename, btnElement) {
             const originalContent = btnElement.innerHTML;
             btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
             btnElement.disabled = true;
 
             try {
-                // 1. Coba sedot file secara langsung ke memori browser
+                // Proses Bypass CORS
                 const response = await fetch(url);
-                
-                if (!response.ok) throw new Error("Gagal menyedot data");
+                if (!response.ok) throw new Error("Akses ditolak server");
 
                 const blob = await response.blob();
                 const blobUrl = window.URL.createObjectURL(blob);
 
-                // 2. Buat link gaib (invisible) untuk memicu download lokal
+                // Eksekusi Download Lokal
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = blobUrl;
-                a.download = filename; // Paksa nama file biar langsung save
+                a.download = filename; 
                 document.body.appendChild(a);
                 a.click();
 
-                // 3. Bersihkan memori
+                // Pembersihan Cache
                 window.URL.revokeObjectURL(blobUrl);
                 document.body.removeChild(a);
 
                 btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Tersimpan!`;
             } catch (error) {
-                console.error("Blob fetch gagal (CORS). Menggunakan jalur alternatif...", error);
+                console.error("Blob gagal. Menggunakan trik HTML5...", error);
+                // Fallback aman tanpa mutar video
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank'; 
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
                 
-                // JIKA SERVER LUAR MEMBLOKIR BLOB FETCH, BUKA LINK SECARA PAKSA DI TAB BARU SEBAGAI CADANGAN
-                btnElement.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Buka Link Asli`;
-                window.open(url, '_blank'); 
+                btnElement.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Terunduh di tab...`;
             } finally {
                 setTimeout(() => {
                     btnElement.innerHTML = originalContent;
                     btnElement.disabled = false;
                 }, 3000);
             }
+        }
+
+        // FUNGSI MULTI-NODE COBALT (Khusus YouTube Anti-Gagal)
+        async function fetchCobaltData(url, isAudio = false) {
+            const nodes = [
+                'https://api.cobalt.tools/api/json',
+                'https://co.wuk.sh/api/json'
+            ];
+            
+            for (let node of nodes) {
+                try {
+                    const res = await fetch(node, {
+                        method: 'POST',
+                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: url, videoQuality: '720', isAudioOnly: isAudio })
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.url) return data.url;
+                        if (data.picker) return data.picker[0].url;
+                    }
+                } catch(e) {
+                    console.log(`Node ${node} sibuk, berpindah server...`);
+                }
+            }
+            return null;
         }
 
         async function handleExtract(e) {
@@ -189,7 +220,7 @@
             btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengekstrak...</span>`;
             statusBox.classList.remove('hidden', 'text-red-400', 'border-red-500/30', 'bg-red-950/40');
             statusBox.classList.add('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40');
-            statusBox.innerHTML = `<i class="fa-solid fa-gear fa-spin mr-2"></i> Mengambil data dari server...`;
+            statusBox.innerHTML = `<i class="fa-solid fa-gear fa-spin mr-2"></i> Mengambil data dari server tercepat...`;
             resultCard.classList.add('hidden');
 
             try {
@@ -206,60 +237,51 @@
                     return;
                 }
 
-                // 2. YOUTUBE ENGINE
+                // 2. YOUTUBE ENGINE PRO (Menggunakan Proxy Anti-CORS Cobalt)
                 if (url.includes('youtube.com') || url.includes('youtu.be')) {
                     let id = url.split('youtu.be/')[1]?.split('?')[0] || url.split('v=')[1]?.split('&')[0] || url.split('shorts/')[1]?.split('?')[0];
                     let thumbUrl = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500';
 
+                    // Eksekusi Server Cobalt (Otomatis mengonversi YouTube jadi Direct CORS-Free Link)
+                    const mp4Url = await fetchCobaltData(url, false);
+                    
+                    if (mp4Url) {
+                        const mp3Url = await fetchCobaltData(url, true);
+                        
+                        const downloads = [{ label: 'Unduh MP4 HD (Otomatis)', url: mp4Url, type: 'video', filename: 'YouTube_Video.mp4' }];
+                        if (mp3Url) downloads.push({ label: 'Unduh MP3 (Otomatis)', url: mp3Url, type: 'audio', filename: 'YouTube_Audio.mp3' });
+
+                        renderResult('YouTube', 'YouTube Terdeteksi', downloads, thumbUrl);
+                        return;
+                    }
+
+                    // Fallback Siputzx Jika Cobalt Super Padat
                     try {
                         const resMp4 = await fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(url)}`);
                         const dataMp4 = await resMp4.json();
 
                         if (dataMp4.status && dataMp4.data && dataMp4.data.dl) {
-                            let mp3Url = null;
-                            try {
-                                const resMp3 = await fetch(`https://api.siputzx.my.id/api/d/ytmp3?url=${encodeURIComponent(url)}`);
-                                const dataMp3 = await resMp3.json();
-                                if (dataMp3.status && dataMp3.data.dl) mp3Url = dataMp3.data.dl;
-                            } catch(err) {}
-
-                            const downloads = [{ label: 'Unduh MP4 HD (Otomatis)', url: dataMp4.data.dl, type: 'video', filename: 'YouTube_Video.mp4' }];
-                            if (mp3Url) downloads.push({ label: 'Unduh MP3 (Otomatis)', url: mp3Url, type: 'audio', filename: 'YouTube_Audio.mp3' });
-
-                            renderResult('YouTube', dataMp4.data.title || 'YouTube Video', downloads, thumbUrl);
+                            renderResult('YouTube', dataMp4.data.title || 'YouTube Video', [
+                                { label: 'Unduh MP4 HD (Otomatis)', url: dataMp4.data.dl, type: 'video', filename: 'YouTube_Video.mp4' }
+                            ], thumbUrl);
                             return;
                         }
                     } catch (err) {}
 
-                    // Fallback YouTube
-                    renderResult('YouTube', `YouTube Video (${id})`, [
-                        { label: 'Buka Link Download Server 1', url: `https://www.y2mate.com/en/youtube/${id}`, type: 'video', fallback: true }
-                    ], thumbUrl);
-                    return;
+                    throw new Error("Server YouTube terlalu padat, coba gunakan link lain.");
                 }
 
                 // 3. INSTAGRAM ENGINE
                 if (url.includes('instagram.com')) {
-                    try {
-                        const res = await fetch(`https://api.siputzx.my.id/api/d/ig?url=${encodeURIComponent(url)}`);
-                        const data = await res.json();
-                        
-                        if (data.status && data.data && data.data.length > 0) {
-                            const downloads = data.data.map((item, index) => ({
-                                label: `Unduh IG Media ${index + 1} (Otomatis)`,
-                                url: item.url,
-                                type: 'video',
-                                filename: `Instagram_Media_${index + 1}.mp4`
-                            }));
-                            renderResult('Instagram', 'Instagram Reels / Post', downloads, 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500');
-                            return;
-                        }
-                    } catch(err) {}
-                    
-                    renderResult('Instagram', 'Instagram Media', [
-                        { label: 'Buka Web Download IG', url: `https://snapinsta.app/id`, type: 'video', fallback: true }
-                    ], 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500');
-                    return;
+                    // Instagram juga dialirkan via Cobalt agar bisa auto-download
+                    const igMp4 = await fetchCobaltData(url, false);
+                    if (igMp4) {
+                        renderResult('Instagram', 'Instagram Reels / Post', [
+                            { label: 'Unduh Media (Otomatis)', url: igMp4, type: 'video', filename: 'Instagram_Media.mp4' }
+                        ], 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500');
+                        return;
+                    }
+                    throw new Error("Gagal memproses Instagram, pastikan akun tidak terkunci (Private).");
                 }
 
                 throw new Error("Link belum didukung. Pastikan menggunakan link TikTok, YouTube, atau IG.");
@@ -296,12 +318,8 @@
                 
                 btn.innerHTML = `<i class="fa-solid ${opt.type === 'audio' ? 'fa-music' : 'fa-download'}"></i> ${opt.label}`;
                 
-                // Gunakan forceDownload jika bukan fallback
-                if (opt.fallback) {
-                    btn.onclick = () => window.open(opt.url, '_blank');
-                } else {
-                    btn.onclick = () => forceDownload(opt.url, opt.filename, btn);
-                }
+                // Panggil forceDownload untuk proses auto-save blob stream
+                btn.onclick = () => forceDownload(opt.url, opt.filename, btn);
                 
                 optionsContainer.appendChild(btn);
             });
