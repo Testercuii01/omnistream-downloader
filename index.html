@@ -3,328 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmniStream — Universal Media Downloader</title>
+    <title>Sugoi Downloader! 🌸</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
-        :root {
-            --bg-dark: #070913;
-            --card-bg: rgba(15, 23, 42, 0.85);
-            --card-border: rgba(255, 255, 255, 0.12);
+    <!-- Google Fonts: Nunito for a playful, rounded look -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'nunito': ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        'anime-pink': '#FFB7B2',
+                        'anime-purple': '#E2C3FF',
+                        'anime-blue': '#B5EAD7',
+                        'anime-dark': '#2D3748'
+                    }
+                }
+            }
         }
+    </script>
+    <style>
+        /* Custom CSS for some extra flair */
         body {
-            background-color: var(--bg-dark);
-            background-image: 
-                radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.25) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(236, 72, 153, 0.25) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.15) 0px, transparent 50%);
-            background-attachment: fixed;
-            color: #f3f4f6;
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Nunito', sans-serif;
+            /* A subtle anime-style pattern or gradient background */
+            background: linear-gradient(135deg, #FFB7B2 0%, #E2C3FF 50%, #B5EAD7 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
         }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
         .glass-panel {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
         }
-        .glass-input {
-            background: rgba(3, 7, 18, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .kawaii-button {
+            transition: all 0.2s ease-in-out;
         }
-        .glass-input:focus-within {
-            border-color: #a855f7;
-            box-shadow: 0 0 25px rgba(168, 85, 247, 0.3);
+        .kawaii-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
-        .btn-gradient {
-            background: linear-gradient(135deg, #7c3aed 0%, #c026d3 50%, #e11d48 100%);
-            transition: all 0.3s ease;
+        .kawaii-button:active {
+            transform: scale(0.95);
         }
-        .btn-gradient:hover {
-            opacity: 0.95;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(192, 38, 211, 0.4);
+        
+        /* Floating animation for the header emoji */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
-        .btn-gradient:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
+        .floating-emoji {
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
         }
     </style>
 </head>
-<body class="flex flex-col justify-between p-4 md:p-8">
+<body class="flex items-center justify-center p-4">
 
-    <header class="max-w-5xl mx-auto w-full flex items-center justify-between py-4 mb-8">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl btn-gradient flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                <i class="fa-solid fa-bolt"></i>
-            </div>
-            <span class="text-2xl font-extrabold tracking-tight text-white">OmniStream</span>
-            <span class="text-xs bg-purple-900/60 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-bold">v1.4 AUTO-SAVE PRO</span>
-        </div>
-        <div class="hidden sm:flex items-center gap-2 text-xs bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 px-3 py-1.5 rounded-full">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-            Cobalt Anti-CORS Active
-        </div>
-    </header>
-
-    <main class="max-w-3xl mx-auto w-full flex-grow flex flex-col items-center justify-center my-auto">
+    <div class="glass-panel rounded-3xl p-8 max-w-2xl w-full mx-auto relative overflow-hidden text-center">
         
-        <div class="text-center mb-8">
-            <span class="inline-block text-xs font-semibold uppercase tracking-widest text-purple-400 bg-purple-950/50 border border-purple-800/50 px-3 py-1 rounded-full mb-3">
-                ⚡ Unduh Otomatis Tanpa Pindah Tab
-            </span>
-            <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-300 tracking-tight leading-tight mb-4">
-                Universal Media Downloader
+        <!-- Decorative blobs -->
+        <div class="absolute top-[-50px] left-[-50px] w-32 h-32 bg-anime-pink rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
+        <div class="absolute top-[-50px] right-[-50px] w-32 h-32 bg-anime-blue rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-50px] left-20 w-32 h-32 bg-anime-purple rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+
+        <div class="relative z-10">
+            <!-- Header -->
+            <h1 class="text-4xl md:text-5xl font-extrabold text-anime-dark mb-2 drop-shadow-md">
+                Sugoi Downloader! <span class="floating-emoji">✨</span>
             </h1>
-            <p class="text-gray-400 text-sm md:text-base max-w-xl mx-auto">
-                Tempelkan link dari TikTok, YouTube, Instagram, atau X/Twitter. File akan diunduh secara langsung dan otomatis.
-            </p>
-        </div>
+            <p class="text-gray-600 mb-8 font-semibold">Download video dari mana aja dengan mudah, Senpai~</p>
 
-        <div class="w-full glass-panel rounded-3xl p-3 md:p-4 mb-6">
-            <form id="downloadForm" onsubmit="handleExtract(event)" class="flex flex-col md:flex-row gap-3">
-                <div class="glass-input rounded-2xl flex items-center px-4 py-3 flex-grow gap-3">
-                    <i class="fa-solid fa-link text-gray-400 text-lg"></i>
-                    <input 
-                        type="url" 
-                        id="mediaUrl" 
-                        placeholder="Paste link TikTok, YouTube, Instagram, atau Twitter..." 
-                        required
-                        class="bg-transparent text-white placeholder-gray-500 w-full focus:outline-none text-sm md:text-base"
-                    >
-                </div>
-                <button 
-                    type="submit" 
-                    id="btnExtract"
-                    class="btn-gradient text-white font-bold px-8 py-3.5 rounded-2xl flex items-center justify-center gap-2 text-sm md:text-base cursor-pointer shadow-lg whitespace-nowrap"
-                >
-                    <i class="fa-solid fa-download"></i>
-                    <span>Ekstrak File</span>
+            <!-- Input Area -->
+            <div class="flex flex-col md:flex-row gap-4 mb-8">
+                <input type="text" id="linkInput" placeholder="Paste link video di sini ya..." 
+                    class="flex-1 px-6 py-4 rounded-2xl border-2 border-anime-purple focus:outline-none focus:border-anime-pink bg-white/90 text-gray-700 shadow-inner placeholder-gray-400 transition-colors">
+                <button id="downloadBtn" onclick="handleDownloadClick()"
+                    class="kawaii-button bg-gradient-to-r from-anime-pink to-anime-purple text-white font-bold py-4 px-8 rounded-2xl shadow-lg border border-white/50">
+                    Unduh Sekarang! 🚀
                 </button>
-            </form>
-        </div>
+            </div>
 
-        <div id="statusBox" class="hidden w-full glass-panel rounded-2xl p-4 mb-6 text-center text-sm font-medium"></div>
+            <!-- Supported Platforms Indicator -->
+            <div class="flex justify-center gap-4 mb-8 text-2xl opacity-70">
+                <i class="fab fa-youtube hover:text-red-500 transition-colors"></i>
+                <i class="fab fa-tiktok hover:text-black transition-colors"></i>
+                <i class="fab fa-instagram hover:text-pink-500 transition-colors"></i>
+                <i class="fab fa-twitter hover:text-blue-400 transition-colors"></i>
+            </div>
 
-        <div id="resultCard" class="hidden w-full glass-panel rounded-3xl p-6 mb-6">
-            <div class="flex flex-col sm:flex-row gap-5 items-center">
-                <div class="relative w-full sm:w-48 h-36 rounded-2xl overflow-hidden bg-black/60 flex-shrink-0 border border-white/10 flex items-center justify-center">
-                    <img id="mediaThumb" src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500" alt="Thumbnail" class="w-full h-full object-cover">
+            <!-- Status Area (Loading/Error) -->
+            <div id="statusArea" class="hidden mb-6">
+                <div id="loadingIndicator" class="hidden">
+                    <p class="text-anime-dark font-bold text-lg animate-pulse">Chotto matte kudasai... (Tunggu sebentar) ⏳</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                        <div class="bg-anime-pink h-2.5 rounded-full" style="width: 45%; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></div>
+                    </div>
                 </div>
+                <div id="errorMessage" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md text-left">
+                    <p class="font-bold">Gomen nasai! (Maaf)</p>
+                    <p id="errorText">Terjadi kesalahan saat mengambil video.</p>
+                </div>
+            </div>
 
-                <div class="flex-grow w-full">
-                    <span id="mediaPlatformTag" class="text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">Media</span>
-                    <h3 id="mediaTitle" class="text-base font-bold text-white mt-2 line-clamp-2 leading-snug">Media Siap Diunduh</h3>
-                    <p class="text-xs text-gray-400 mt-1 mb-4">Klik tombol di bawah untuk mengunduh otomatis tanpa pindah tab.</p>
-
-                    <div id="downloadOptions" class="flex flex-wrap gap-2"></div>
+            <!-- Result Area -->
+            <div id="resultArea" class="hidden bg-white/60 rounded-2xl p-6 shadow-sm border border-white mt-6">
+                <div class="flex flex-col md:flex-row gap-6 items-center md:items-start text-left">
+                    <!-- Thumbnail -->
+                    <div class="w-full md:w-1/3 flex-shrink-0">
+                        <img id="videoThumbnail" src="https://placehold.co/400x225/E2C3FF/2D3748?text=Thumbnail" alt="Video Thumbnail" class="w-full h-auto rounded-xl shadow-md border-2 border-white">
+                    </div>
+                    
+                    <!-- Video Info & Download Options -->
+                    <div class="w-full md:w-2/3 flex flex-col justify-between h-full">
+                        <div>
+                            <h3 id="videoTitle" class="text-xl font-bold text-anime-dark mb-2 line-clamp-2">Judul Video Akan Muncul Di Sini</h3>
+                            <p id="videoAuthor" class="text-sm text-gray-500 mb-4">By: @username</p>
+                        </div>
+                        
+                        <div id="downloadOptions" class="flex flex-col gap-3 mt-4">
+                            <!-- Buttons will be generated here by JS -->
+                            <button class="kawaii-button bg-anime-blue text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-opacity-80 flex items-center justify-center gap-2">
+                                <span>MP4 (720p)</span>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            </button>
+                            <button class="kawaii-button bg-gray-200 text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-gray-300 flex items-center justify-center gap-2">
+                                <span>Audio (MP3)</span>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
 
-    </main>
-
-    <footer class="text-center text-xs text-gray-500 py-4">
-        OmniStream v1.4 PRO Anti-CORS Engine
-    </footer>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <script>
-        // CORE DOWNLOADER: Otomatis Sedot Blob Tanpa Pindah Tab
-        async function forceDownload(url, filename, btnElement) {
-            const originalContent = btnElement.innerHTML;
-            btnElement.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...`;
-            btnElement.disabled = true;
+            // 3. Panggil API
+            // Tampilkan Loading
+            showLoading();
 
             try {
-                // Proses Bypass CORS
-                const response = await fetch(url);
-                if (!response.ok) throw new Error("Akses ditolak server");
+                // =====================================================================
+                // CARA AGAR 100% WORK DI DUNIA NYATA:
+                // 1. Daftar di rapidapi.com (cari "All in One Social Media Downloader")
+                // 2. Dapatkan API Key
+                // 3. Hapus/Comment kode SIMULASI di bawah, lalu Un-comment kode FETCH ini:
+                // =====================================================================
+                
+                /*
+                const apiUrl = `https://contoh-api-downloader.p.rapidapi.com/download?url=${encodeURIComponent(link)}`;
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    headers: {
+                        'x-rapidapi-key': 'MASUKKAN_API_KEY_KAMU_DISINI',
+                        'x-rapidapi-host': 'contoh-api-downloader.p.rapidapi.com'
+                    }
+                });
+                const data = await response.json();
+                
+                // Lalu panggil fungsi displayResults(data) menyesuaikan format dari API tersebut
+                */
 
-                const blob = await response.blob();
-                const blobUrl = window.URL.createObjectURL(blob);
+                // --- SIMULASI RESPONS DARI API (UNTUK CEK UI/UX) ---
+                // Simulasi delay jaringan selama 2 detik
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                
+                const mockApiResponse = {
+                    success: true,
+                    title: "Opening Anime Terbaik - Musim Semi 2024",
+                    author: "@AnimeFansClub",
+                    thumbnailUrl: "https://placehold.co/400x225/E2C3FF/2D3748?text=Anime+OP",
+                    downloads: [
+                        { type: "Video", quality: "1080p", format: "mp4", url: "#" },
+                        { type: "Video", quality: "720p", format: "mp4", url: "#" },
+                        { type: "Audio", quality: "128kbps", format: "mp3", url: "#" }
+                    ]
+                };
 
-                // Eksekusi Download Lokal
-                const a = document.createElement('a');
-                a.style.display = 'none';
-                a.href = blobUrl;
-                a.download = filename; 
-                document.body.appendChild(a);
-                a.click();
+                // Jika simulasi gagal
+                // throw new Error("Gagal mengambil data dari server"); 
 
-                // Pembersihan Cache
-                window.URL.revokeObjectURL(blobUrl);
-                document.body.removeChild(a);
+                // 4. Tampilkan Hasil
+                displayResults(mockApiResponse);
 
-                btnElement.innerHTML = `<i class="fa-solid fa-check"></i> Tersimpan!`;
             } catch (error) {
-                console.error("Blob gagal. Menggunakan trik HTML5...", error);
-                // Fallback aman tanpa mutar video
-                const a = document.createElement('a');
-                a.href = url;
-                a.target = '_blank'; 
-                a.download = filename;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                
-                btnElement.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> Terunduh di tab...`;
-            } finally {
-                setTimeout(() => {
-                    btnElement.innerHTML = originalContent;
-                    btnElement.disabled = false;
-                }, 3000);
+                showError("Ups! " + error.message);
             }
         }
 
-        // FUNGSI MULTI-NODE COBALT (Khusus YouTube Anti-Gagal)
-        async function fetchCobaltData(url, isAudio = false) {
-            const nodes = [
-                'https://api.cobalt.tools/api/json',
-                'https://co.wuk.sh/api/json'
-            ];
-            
-            for (let node of nodes) {
-                try {
-                    const res = await fetch(node, {
-                        method: 'POST',
-                        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ url: url, videoQuality: '720', isAudioOnly: isAudio })
-                    });
-                    if (res.ok) {
-                        const data = await res.json();
-                        if (data.url) return data.url;
-                        if (data.picker) return data.picker[0].url;
-                    }
-                } catch(e) {
-                    console.log(`Node ${node} sibuk, berpindah server...`);
-                }
-            }
-            return null;
-        }
+        // --- FUNGSI-FUNGSI HELPER UTILITY ---
 
-        async function handleExtract(e) {
-            e.preventDefault();
-            const url = document.getElementById('mediaUrl').value.trim();
-            const btn = document.getElementById('btnExtract');
-            const statusBox = document.getElementById('statusBox');
-            const resultCard = document.getElementById('resultCard');
-
-            if (!url) return;
-
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> <span>Mengekstrak...</span>`;
-            statusBox.classList.remove('hidden', 'text-red-400', 'border-red-500/30', 'bg-red-950/40');
-            statusBox.classList.add('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40');
-            statusBox.innerHTML = `<i class="fa-solid fa-gear fa-spin mr-2"></i> Mengambil data dari server tercepat...`;
-            resultCard.classList.add('hidden');
-
+        // Memeriksa apakah text adalah URL yang valid
+        function isValidUrl(string) {
             try {
-                // 1. TIKTOK ENGINE
-                if (url.includes('tiktok.com')) {
-                    const res = await fetch(`https://www.tikwm.com/api/?url=${encodeURIComponent(url)}`);
-                    const json = await res.json();
-                    if (json.code !== 0) throw new Error("Gagal mengekstrak TikTok.");
-
-                    renderResult('TikTok', json.data.title || 'TikTok Video', [
-                        { label: 'Unduh MP4 (Otomatis)', url: json.data.play, type: 'video', filename: 'TikTok_Video.mp4' },
-                        { label: 'Unduh MP3 (Otomatis)', url: json.data.music, type: 'audio', filename: 'TikTok_Lagu.mp3' }
-                    ], json.data.cover);
-                    return;
-                }
-
-                // 2. YOUTUBE ENGINE PRO (Menggunakan Proxy Anti-CORS Cobalt)
-                if (url.includes('youtube.com') || url.includes('youtu.be')) {
-                    let id = url.split('youtu.be/')[1]?.split('?')[0] || url.split('v=')[1]?.split('&')[0] || url.split('shorts/')[1]?.split('?')[0];
-                    let thumbUrl = id ? `https://i.ytimg.com/vi/${id}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=500';
-
-                    // Eksekusi Server Cobalt (Otomatis mengonversi YouTube jadi Direct CORS-Free Link)
-                    const mp4Url = await fetchCobaltData(url, false);
-                    
-                    if (mp4Url) {
-                        const mp3Url = await fetchCobaltData(url, true);
-                        
-                        const downloads = [{ label: 'Unduh MP4 HD (Otomatis)', url: mp4Url, type: 'video', filename: 'YouTube_Video.mp4' }];
-                        if (mp3Url) downloads.push({ label: 'Unduh MP3 (Otomatis)', url: mp3Url, type: 'audio', filename: 'YouTube_Audio.mp3' });
-
-                        renderResult('YouTube', 'YouTube Terdeteksi', downloads, thumbUrl);
-                        return;
-                    }
-
-                    // Fallback Siputzx Jika Cobalt Super Padat
-                    try {
-                        const resMp4 = await fetch(`https://api.siputzx.my.id/api/d/ytmp4?url=${encodeURIComponent(url)}`);
-                        const dataMp4 = await resMp4.json();
-
-                        if (dataMp4.status && dataMp4.data && dataMp4.data.dl) {
-                            renderResult('YouTube', dataMp4.data.title || 'YouTube Video', [
-                                { label: 'Unduh MP4 HD (Otomatis)', url: dataMp4.data.dl, type: 'video', filename: 'YouTube_Video.mp4' }
-                            ], thumbUrl);
-                            return;
-                        }
-                    } catch (err) {}
-
-                    throw new Error("Server YouTube terlalu padat, coba gunakan link lain.");
-                }
-
-                // 3. INSTAGRAM ENGINE
-                if (url.includes('instagram.com')) {
-                    // Instagram juga dialirkan via Cobalt agar bisa auto-download
-                    const igMp4 = await fetchCobaltData(url, false);
-                    if (igMp4) {
-                        renderResult('Instagram', 'Instagram Reels / Post', [
-                            { label: 'Unduh Media (Otomatis)', url: igMp4, type: 'video', filename: 'Instagram_Media.mp4' }
-                        ], 'https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500');
-                        return;
-                    }
-                    throw new Error("Gagal memproses Instagram, pastikan akun tidak terkunci (Private).");
-                }
-
-                throw new Error("Link belum didukung. Pastikan menggunakan link TikTok, YouTube, atau IG.");
-
+                new URL(string);
+                return true;
             } catch (err) {
-                statusBox.classList.remove('text-purple-300', 'border-purple-500/30', 'bg-purple-950/40');
-                statusBox.classList.add('text-red-400', 'border-red-500/30', 'bg-red-950/40');
-                statusBox.innerHTML = `<i class="fa-solid fa-circle-exclamation mr-2"></i> ${err.message}`;
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = `<i class="fa-solid fa-download"></i> <span>Ekstrak File</span>`;
+                return false;
             }
         }
 
-        function renderResult(platform, title, options, thumbUrl) {
-            document.getElementById('statusBox').classList.add('hidden');
-            document.getElementById('mediaPlatformTag').innerText = platform;
-            document.getElementById('mediaTitle').innerText = title;
+        // Menampilkan UI Loading
+        function showLoading() {
+            document.getElementById('statusArea').classList.remove('hidden');
+            document.getElementById('loadingIndicator').classList.remove('hidden');
+            document.getElementById('errorMessage').classList.add('hidden');
+            document.getElementById('resultArea').classList.add('hidden');
+        }
 
-            if (thumbUrl) {
-                document.getElementById('mediaThumb').src = thumbUrl;
-            }
+        // Menampilkan Pesan Error
+        function showError(message) {
+            document.getElementById('statusArea').classList.remove('hidden');
+            document.getElementById('loadingIndicator').classList.add('hidden');
+            const errorContainer = document.getElementById('errorMessage');
+            errorContainer.classList.remove('hidden');
+            document.getElementById('errorText').innerText = message;
+            document.getElementById('resultArea').classList.add('hidden');
+        }
 
-            const optionsContainer = document.getElementById('downloadOptions');
-            optionsContainer.innerHTML = '';
+        // Menampilkan Data Hasil ke UI
+        function displayResults(data) {
+            // Sembunyikan loading
+            document.getElementById('statusArea').classList.add('hidden');
+            
+            // Tampilkan area hasil
+            const resultArea = document.getElementById('resultArea');
+            resultArea.classList.remove('hidden');
 
-            options.forEach(opt => {
+            // Set data teks dan gambar
+            document.getElementById('videoTitle').innerText = data.title;
+            document.getElementById('videoAuthor').innerText = data.author;
+            document.getElementById('videoThumbnail').src = data.thumbnailUrl;
+
+            // Buat tombol download dinamis berdasarkan data
+            const downloadOptionsContainer = document.getElementById('downloadOptions');
+            downloadOptionsContainer.innerHTML = ''; // Kosongkan tombol lama
+
+            data.downloads.forEach(dl => {
                 const btn = document.createElement('button');
-                btn.className = `px-5 py-3 rounded-xl font-bold text-xs flex items-center gap-2 transition-all cursor-pointer ${
-                    opt.type === 'audio' 
-                    ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30 hover:bg-amber-500/40' 
-                    : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 hover:bg-emerald-500/40'
-                }`;
                 
-                btn.innerHTML = `<i class="fa-solid ${opt.type === 'audio' ? 'fa-music' : 'fa-download'}"></i> ${opt.label}`;
-                
-                // Panggil forceDownload untuk proses auto-save blob stream
-                btn.onclick = () => forceDownload(opt.url, opt.filename, btn);
-                
-                optionsContainer.appendChild(btn);
-            });
+                // Styling berbeda untuk Video vs Audio
+                if(dl.type === "Video") {
+                    btn.className = "kawaii-button bg-anime-blue text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-opacity-80 flex items-center justify-center gap-2";
+                } else {
+                    btn.className = "kawaii-button bg-gray-200 text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-gray-300 flex items-center justify-center gap-2";
+                }
 
-            document.getElementById('resultCard').classList.remove('hidden');
+                // Ikon SVG sederhana (Panah Bawah)
+                const iconSvg = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>`;
+
+                btn.innerHTML = `<span>${dl.type} (${dl.quality} - ${dl.format.toUpperCase()})</span> ${iconSvg}`;
+                
+                // Event saat tombol download spesifik diklik
+                btn.onclick = () => {
+                    // Dalam implementasi nyata, ini akan redirect ke URL download atau men-trigger download
+                    alert(`Simulasi: Memulai download ${dl.format} kualitas ${dl.quality}... Yay! 🎉`);
+                };
+
+                downloadOptionsContainer.appendChild(btn);
+            });
         }
     </script>
 </body>
