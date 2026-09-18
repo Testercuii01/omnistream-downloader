@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VibeDownloader | Unduh Video & Audio Mudah</title>
+    <title>Mox4Graph Downloader | Unduh Video & Audio Mudah</title>
     <!-- Tailwind CSS untuk styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Plus Jakarta Sans (Modern & Premium) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- FontAwesome untuk ikon -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -17,22 +17,23 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     },
                     colors: {
                         dark: {
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            700: '#334155',
+                            900: '#09090b',
+                            800: '#18181b',
+                            700: '#27272a',
                         },
                         primary: {
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
+                            500: '#06b6d4', // Cyan
+                            600: '#0891b2',
+                            accent: '#8b5cf6' // Purple
                         }
                     },
                     animation: {
                         'blob': 'blob 7s infinite',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'mask-move': 'maskPan 30s ease-in-out infinite alternate', // Animasi topeng
                     },
                     keyframes: {
                         blob: {
@@ -40,6 +41,12 @@
                             '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
                             '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
                             '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        // Animasi gerak pelan untuk latar belakang topeng
+                        maskPan: {
+                            '0%': { transform: 'scale(1) translate(0, 0)' },
+                            '50%': { transform: 'scale(1.05) translate(-2%, 2%)' },
+                            '100%': { transform: 'scale(1.1) translate(1%, -1%)' }
                         }
                     }
                 }
@@ -47,27 +54,34 @@
         }
     </script>
     <style>
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+        .glass-premium {
+            background: linear-gradient(135deg, rgba(24, 24, 27, 0.7), rgba(9, 9, 11, 0.8));
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #0f172a; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+        .quality-badge {
+            background: linear-gradient(90deg, #06b6d4, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #09090b; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
         
-        .loader {
-            border: 3px solid rgba(255,255,255,0.1);
-            border-radius: 50%;
-            border-top: 3px solid #8b5cf6;
+        .loader-mox {
             width: 24px;
             height: 24px;
-            -webkit-animation: spin 1s linear infinite;
-            animation: spin 1s linear infinite;
+            border-radius: 50%;
+            display: inline-block;
+            border-top: 3px solid #06b6d4;
+            border-right: 3px solid transparent;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
         }
-        @keyframes spin {
+        @keyframes rotation {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
@@ -76,58 +90,66 @@
 
 <body class="bg-dark-900 text-slate-200 font-sans min-h-screen relative overflow-x-hidden selection:bg-primary-500 selection:text-white flex flex-col">
 
-    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
-        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000"></div>
-        <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000"></div>
+    <!-- Latar Belakang Topeng Gerak -->
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-dark-900">
+        <!-- Gambar Topeng Anonymous. Diberi efek grayscale (abu-abu), opacity 15%, dan animasi bergerak -->
+        <img src="https://images.unsplash.com/photo-1541535899479-05244b413155?q=80&w=2000&auto=format&fit=crop" 
+             alt="Mask Background" 
+             class="absolute w-[120%] h-[120%] top-[-10%] left-[-10%] object-cover opacity-15 grayscale mix-blend-lighten animate-mask-move">
+        
+        <!-- Efek Lampu Warna-warni (Blob) -->
+        <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary-600 rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-blob"></div>
+        <div class="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-primary-accent rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-blob animation-delay-2000"></div>
     </div>
 
-    <nav class="relative z-10 w-full py-6 px-4 sm:px-6 lg:px-8 border-b border-white/5 glass">
+    <!-- Navigasi Atas -->
+    <nav class="relative z-10 w-full py-5 px-4 sm:px-6 lg:px-8 border-b border-white/5 glass-premium sticky top-0">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-blue-500 flex items-center justify-center shadow-lg shadow-primary-500/20">
-                    <i class="fa-solid fa-cloud-arrow-down text-white text-xl"></i>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-blue-600 flex items-center justify-center shadow-lg shadow-primary-500/30">
+                    <i class="fa-solid fa-bolt text-white text-xl"></i>
                 </div>
                 <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 tracking-tight">
                     Vibe<span class="text-primary-500">Downloader</span>
                 </h1>
             </div>
-            <div class="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-400">
-                <span class="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-xs font-bold border border-green-500/20">
-                    <i class="fa-solid fa-check-circle mr-1"></i> Powered by Cobalt (Free)
-                </span>
+            
+            <!-- Tombol ke Instagram Mox4Graph -->
+            <div class="hidden sm:flex items-center">
+                <a href="https://www.instagram.com/m.akhsaaa" target="_blank" rel="noopener noreferrer" class="px-4 py-1.5 bg-gradient-to-r from-primary-500/10 to-primary-accent/10 text-primary-500 hover:text-white rounded-full text-xs font-bold border border-primary-500/20 hover:border-primary-accent/50 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_20px_rgba(139,92,246,0.3)] flex items-center gap-2 transition-all hover:scale-105 cursor-pointer">
+                    <i class="fa-brands fa-instagram text-sm"></i> By Mox4Graph
+                </a>
             </div>
         </div>
     </nav>
 
-    <main class="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-12 sm:py-20 w-full max-w-4xl mx-auto">
+    <main class="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-12 sm:py-20 w-full max-w-5xl mx-auto">
         
-        <div class="text-center mb-10">
-            <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
-                Unduh Semua Vibe <br class="hidden sm:block" />
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-400">Tanpa Ribet.</span>
+        <div class="text-center mb-12">
+            <h2 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-white mb-6 tracking-tight leading-tight drop-shadow-lg">
+                Simpan Semua Momen <br class="hidden sm:block" />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 via-blue-400 to-primary-accent">Kualitas Terbaik.</span>
             </h2>
-            <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
-                Paste link dari YouTube, TikTok, Instagram, X (Twitter), atau Spotify. 
-                Gratis, tanpa iklan, dan tanpa perlu API Key!
+            <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto font-medium bg-dark-900/40 p-2 rounded-lg backdrop-blur-sm">
+                Satu alat untuk TikTok, YouTube, Instagram, X, & Spotify. Dapatkan video resolusi hingga 1080p dan Audio Jernih.
             </p>
         </div>
 
-        <div class="w-full max-w-3xl glass rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/10 relative">
+        <div class="w-full max-w-3xl glass-premium rounded-3xl p-3 sm:p-4 shadow-2xl relative">
             <form id="downloadForm" class="relative">
-                <div class="relative flex flex-col sm:flex-row gap-4">
-                    <div class="relative flex-grow">
-                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <i class="fa-solid fa-link text-slate-500"></i>
+                <div class="relative flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-grow group">
+                        <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none transition-colors group-focus-within:text-primary-500 text-slate-500">
+                            <i class="fa-solid fa-link text-lg"></i>
                         </div>
                         <input 
                             type="url" 
                             id="urlInput"
                             required
                             placeholder="Tempel link video/musik di sini..." 
-                            class="w-full bg-dark-900/50 border border-slate-700 text-white text-base rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block pl-11 p-4 transition-all placeholder-slate-500 outline-none hover:border-slate-600"
+                            class="w-full bg-dark-900/80 border border-white/10 text-white text-base sm:text-lg rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block pl-14 p-4 sm:p-5 transition-all placeholder-slate-500 outline-none hover:border-white/20"
                         >
-                        <button type="button" id="pasteBtn" class="absolute inset-y-0 right-2 my-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-medium transition-colors border border-slate-700 hidden sm:flex items-center gap-2">
+                        <button type="button" id="pasteBtn" class="absolute inset-y-0 right-3 my-3 px-4 bg-dark-800 hover:bg-dark-700 text-slate-300 rounded-xl text-sm font-semibold transition-colors border border-white/5 hidden sm:flex items-center gap-2">
                             <i class="fa-regular fa-clipboard"></i> Paste
                         </button>
                     </div>
@@ -135,80 +157,122 @@
                     <button 
                         type="submit" 
                         id="fetchBtn"
-                        class="bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-2xl px-8 py-4 transition-all shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2 min-w-[140px] active:scale-95"
+                        class="bg-gradient-to-r from-primary-600 to-blue-600 hover:from-primary-500 hover:to-blue-500 text-white font-bold rounded-2xl px-8 py-4 sm:py-5 transition-all shadow-[0_0_20px_rgba(6,182,212,0.4)] flex items-center justify-center gap-2 min-w-[160px] active:scale-95 text-lg"
                     >
                         <span id="btnText">Proses</span>
-                        <i id="btnIcon" class="fa-solid fa-bolt"></i>
-                        <div id="btnLoader" class="loader hidden"></div>
+                        <i id="btnIcon" class="fa-solid fa-arrow-right"></i>
+                        <div id="btnLoader" class="loader-mox hidden"></div>
                     </button>
                 </div>
                 
-                <div id="errorMessage" class="hidden mt-4 text-red-400 text-sm flex items-center gap-2 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
-                    <i class="fa-solid fa-circle-exclamation"></i>
+                <div id="errorMessage" class="hidden mt-4 text-red-400 text-sm flex items-center gap-3 bg-red-500/10 p-4 rounded-2xl border border-red-500/20 font-medium">
+                    <i class="fa-solid fa-circle-exclamation text-lg"></i>
                     <span id="errorText">Ups, link tidak valid atau tidak didukung.</span>
                 </div>
             </form>
+        </div>
 
-            <div id="resultArea" class="hidden mt-8 pt-8 border-t border-slate-700/50 animate-[fadeIn_0.5s_ease-out]">
+        <!-- Area Hasil Unduhan -->
+        <div id="resultArea" class="hidden w-full max-w-4xl mt-8 glass-premium rounded-3xl p-6 sm:p-8 border border-white/10 animate-[fadeIn_0.5s_ease-out]">
+            
+            <div class="flex flex-col md:flex-row gap-8 mb-8 items-start">
+                <!-- Thumbnail -->
+                <div class="w-full md:w-5/12 aspect-video bg-dark-900 rounded-2xl overflow-hidden relative border border-white/10 flex-shrink-0 group shadow-lg">
+                    <img id="thumbImg" src="" alt="Thumbnail" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-transparent opacity-80"></div>
+                    <!-- Badge Kualitas Overlay -->
+                    <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-3 py-1 rounded-lg border border-white/10 flex items-center gap-1.5">
+                        <i class="fa-solid fa-gem text-primary-500 text-xs"></i>
+                        <span class="text-xs font-bold text-white uppercase tracking-wider">HQ Media</span>
+                    </div>
+                </div>
                 
-                <div class="flex flex-col md:flex-row gap-6 mb-8">
-                    <div class="w-full md:w-1/3 aspect-video bg-dark-900 rounded-2xl overflow-hidden relative border border-slate-700/50 flex-shrink-0 group">
-                        <img id="thumbImg" src="" alt="Thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent"></div>
+                <!-- Info Meta Data -->
+                <div class="flex flex-col flex-grow w-full">
+                    <!-- Platform Verified Badge -->
+                    <div class="flex items-center gap-2 mb-3">
+                        <span id="platformBadge" class="px-3 py-1.5 rounded-full border border-white/10 bg-dark-800 text-xs font-bold uppercase tracking-wider flex items-center gap-2 shadow-inner">
+                            <!-- Diisi oleh JS -->
+                        </span>
                     </div>
                     
-                    <div class="flex flex-col justify-center flex-grow">
-                        <div class="flex items-center gap-2 mb-2">
-                            <span id="platformBadge" class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"></span>
+                    <h3 id="videoTitle" class="text-xl sm:text-2xl font-bold text-white mb-3 line-clamp-2 leading-tight drop-shadow-md">
+                        Mengambil detail konten...
+                    </h3>
+                    
+                    <div class="flex flex-wrap items-center gap-4 text-sm font-medium text-slate-400 mt-auto pt-4 border-t border-white/5">
+                        <div class="flex items-center gap-2 bg-dark-800/80 px-3 py-1.5 rounded-lg border border-white/5">
+                            <i class="fa-solid fa-circle-user text-primary-500"></i>
+                            <span id="authorName" class="text-slate-200">Menunggu...</span>
                         </div>
-                        <h3 id="videoTitle" class="text-xl sm:text-2xl font-bold text-white mb-2 line-clamp-2">
-                            Konten Siap Diunduh!
-                        </h3>
-                        <p id="authorName" class="text-sm text-green-400 flex items-center gap-2">
-                            <i class="fa-solid fa-check-circle"></i> Berhasil diekstrak dari server Cobalt
-                        </p>
+                        <div class="flex items-center gap-2 bg-dark-800/80 px-3 py-1.5 rounded-lg border border-white/5">
+                            <i class="fa-solid fa-clock text-slate-400"></i>
+                            <span id="videoDuration">--:--</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Navigasi Kualitas -->
+            <div class="bg-dark-900/60 rounded-2xl p-2 border border-white/5">
+                <div class="flex p-1 bg-dark-800 rounded-xl mb-4 relative z-0">
+                    <button id="tabVideo" class="flex-1 py-3 text-sm font-bold rounded-lg bg-primary-600 text-white shadow-md transition-all flex justify-center items-center gap-2" onclick="switchTab('video')">
+                        <i class="fa-solid fa-clapperboard"></i> Download Video
+                    </button>
+                    <button id="tabAudio" class="flex-1 py-3 text-sm font-bold rounded-lg text-slate-400 hover:text-white transition-all flex justify-center items-center gap-2" onclick="switchTab('audio')">
+                        <i class="fa-solid fa-music"></i> Download Audio
+                    </button>
+                </div>
+
+                <!-- Opsi Video -->
+                <div id="panelVideo" class="space-y-4 p-2">
+                    <div class="flex items-center justify-between px-1 mb-2">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Kualitas Tersedia</h4>
+                        <span class="text-[10px] bg-primary-500/20 text-primary-500 px-2 py-1 rounded-md font-bold">MP4 Format</span>
+                    </div>
+                    <div id="videoOptions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <!-- Card dirender JS -->
                     </div>
                 </div>
 
-                <div class="bg-dark-900/40 rounded-2xl p-2 border border-slate-700/50">
-                    <div class="flex p-1 bg-dark-800 rounded-xl mb-4">
-                        <button id="tabVideo" class="flex-1 py-2 text-sm font-semibold rounded-lg bg-primary-600 text-white shadow-sm transition-all" onclick="switchTab('video')">
-                            <i class="fa-solid fa-video mr-2"></i> Video (MP4)
-                        </button>
-                        <button id="tabAudio" class="flex-1 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition-all" onclick="switchTab('audio')">
-                            <i class="fa-solid fa-music mr-2"></i> Audio (MP3)
-                        </button>
+                <!-- Opsi Audio -->
+                <div id="panelAudio" class="hidden space-y-4 p-2">
+                    <div class="flex items-center justify-between px-1 mb-2">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Pilihan Suara</h4>
+                        <span class="text-[10px] bg-primary-accent/20 text-primary-accent px-2 py-1 rounded-md font-bold">MP3 Format</span>
                     </div>
-
-                    <div id="panelVideo" class="space-y-3">
-                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider px-2 mb-2">Pilihan Video</h4>
-                        <div id="videoOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
-                    </div>
-
-                    <div id="panelAudio" class="hidden space-y-3">
-                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider px-2 mb-2">Pilihan Audio</h4>
-                        <div id="audioOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                    <div id="audioOptions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <!-- Card dirender JS -->
                     </div>
                 </div>
             </div>
         </div>
         
-        <div id="supported" class="mt-16 text-center">
-            <p class="text-sm font-medium text-slate-500 mb-6 uppercase tracking-widest">Mendukung Platform Populer</p>
-            <div class="flex flex-wrap justify-center gap-6 sm:gap-8 opacity-70">
-                <i class="fa-brands fa-youtube text-3xl sm:text-4xl hover:text-red-500 hover:opacity-100 transition-all"></i>
-                <i class="fa-brands fa-tiktok text-3xl sm:text-4xl hover:text-white hover:opacity-100 transition-all"></i>
-                <i class="fa-brands fa-instagram text-3xl sm:text-4xl hover:text-pink-500 hover:opacity-100 transition-all"></i>
-                <i class="fa-brands fa-x-twitter text-3xl sm:text-4xl hover:text-white hover:opacity-100 transition-all"></i>
-                <i class="fa-brands fa-spotify text-3xl sm:text-4xl hover:text-green-500 hover:opacity-100 transition-all"></i>
+        <div id="supported" class="mt-20 text-center relative z-10">
+            <p class="text-xs font-bold text-slate-400 mb-6 uppercase tracking-[0.2em]">Supported Ecosystems</p>
+            <div class="flex flex-wrap justify-center gap-8 sm:gap-12 opacity-60 transition-all duration-500">
+                <i class="fa-brands fa-youtube text-3xl hover:text-red-500 hover:scale-110 transition-all cursor-pointer"></i>
+                <i class="fa-brands fa-tiktok text-3xl hover:text-white hover:scale-110 transition-all cursor-pointer"></i>
+                <i class="fa-brands fa-instagram text-3xl hover:text-pink-500 hover:scale-110 transition-all cursor-pointer"></i>
+                <i class="fa-brands fa-x-twitter text-3xl hover:text-white hover:scale-110 transition-all cursor-pointer"></i>
+                <i class="fa-brands fa-spotify text-3xl hover:text-green-500 hover:scale-110 transition-all cursor-pointer"></i>
             </div>
         </div>
 
     </main>
 
-    <footer class="relative z-10 py-8 border-t border-white/5 bg-dark-900/80 mt-auto">
-        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
-            <p>&copy; 2026 VibeDownloader. Menggunakan API Open-Source Cobalt.</p>
+    <!-- Footer dengan tombol profil Mox4Graph -->
+    <footer class="relative z-10 py-6 border-t border-white/5 bg-dark-900/90 mt-auto backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
+            <p>&copy; 2026 VibeDownloader. All rights reserved.</p>
+            
+            <a href="https://www.instagram.com/m.akhsaaa" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 px-5 py-2.5 bg-dark-800 hover:bg-dark-700 border border-slate-700 hover:border-primary-accent/50 rounded-full transition-all group shadow-lg">
+                <span class="text-slate-400 group-hover:text-white transition-colors">Created with 🔥 by</span>
+                <span class="font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-primary-accent group-hover:from-primary-500 group-hover:to-pink-500">Mox4Graph</span>
+                <div class="w-6 h-6 rounded-full bg-primary-accent/10 flex items-center justify-center group-hover:bg-pink-500/20 transition-colors">
+                    <i class="fa-brands fa-instagram text-primary-accent group-hover:text-pink-500 group-hover:scale-110 transition-transform"></i>
+                </div>
+            </a>
         </div>
     </footer>
 
@@ -234,20 +298,24 @@
         const videoOptions = document.getElementById('videoOptions');
         const audioOptions = document.getElementById('audioOptions');
 
+        // Fungsi Deteksi Platform + Verified Badge
         function detectPlatform(url) {
             url = url.toLowerCase();
-            if (url.includes('youtube.com') || url.includes('youtu.be')) return { name: 'YouTube', icon: 'fa-youtube', color: 'bg-red-500/20 text-red-400 border-red-500/30' };
-            if (url.includes('tiktok.com')) return { name: 'TikTok', icon: 'fa-tiktok', color: 'bg-slate-700/50 text-white border-slate-600' };
-            if (url.includes('spotify.com')) return { name: 'Spotify', icon: 'fa-spotify', color: 'bg-green-500/20 text-green-400 border-green-500/30' };
-            if (url.includes('instagram.com')) return { name: 'Instagram', icon: 'fa-instagram', color: 'bg-pink-500/20 text-pink-400 border-pink-500/30' };
-            if (url.includes('twitter.com') || url.includes('x.com')) return { name: 'X (Twitter)', icon: 'fa-x-twitter', color: 'bg-slate-700/50 text-white border-slate-600' };
-            return { name: 'Universal', icon: 'fa-globe', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' };
+            const verifiedIcon = '<i class="fa-solid fa-circle-check text-blue-400 ml-1" title="Verified Source"></i>';
+            
+            if (url.includes('youtube.com') || url.includes('youtu.be')) return { name: 'YouTube', icon: 'fa-youtube', color: 'text-red-500', verified: verifiedIcon };
+            if (url.includes('tiktok.com')) return { name: 'TikTok', icon: 'fa-tiktok', color: 'text-white', verified: verifiedIcon };
+            if (url.includes('spotify.com')) return { name: 'Spotify', icon: 'fa-spotify', color: 'text-green-500', verified: verifiedIcon };
+            if (url.includes('instagram.com')) return { name: 'Instagram', icon: 'fa-instagram', color: 'text-pink-500', verified: verifiedIcon };
+            if (url.includes('twitter.com') || url.includes('x.com')) return { name: 'X (Twitter)', icon: 'fa-x-twitter', color: 'text-white', verified: verifiedIcon };
+            return { name: 'Link Universal', icon: 'fa-link', color: 'text-primary-500', verified: '' };
         }
 
+        // Fungsi Loading State
         function setLoading(isLoading) {
             if (isLoading) {
                 fetchBtn.disabled = true;
-                btnText.textContent = "Mengekstrak...";
+                btnText.textContent = "Menganalisa...";
                 btnIcon.classList.add('hidden');
                 btnLoader.classList.remove('hidden');
                 errorMsg.classList.add('hidden');
@@ -260,43 +328,56 @@
             }
         }
 
+        // Fungsi Switch Tab Video/Audio
         window.switchTab = function(type) {
+            const activeClass = ['bg-primary-600', 'text-white', 'shadow-md'];
+            const inactiveClass = ['bg-transparent', 'text-slate-400', 'shadow-none', 'hover:text-white'];
+            
             if (type === 'video') {
-                tabVideo.classList.replace('bg-transparent', 'bg-primary-600');
-                tabVideo.classList.replace('text-slate-400', 'text-white');
-                tabAudio.classList.replace('bg-primary-600', 'bg-transparent');
-                tabAudio.classList.replace('text-white', 'text-slate-400');
+                tabVideo.classList.add(...activeClass);
+                tabVideo.classList.remove(...inactiveClass);
+                tabAudio.classList.remove(...activeClass);
+                tabAudio.classList.add(...inactiveClass);
                 panelVideo.classList.remove('hidden');
                 panelAudio.classList.add('hidden');
             } else {
-                tabAudio.classList.replace('bg-transparent', 'bg-primary-600');
-                tabAudio.classList.replace('text-slate-400', 'text-white');
-                tabVideo.classList.replace('bg-primary-600', 'bg-transparent');
-                tabVideo.classList.replace('text-white', 'text-slate-400');
+                tabAudio.classList.add(...activeClass);
+                tabAudio.classList.remove(...inactiveClass);
+                tabVideo.classList.remove(...activeClass);
+                tabVideo.classList.add(...inactiveClass);
                 panelAudio.classList.remove('hidden');
                 panelVideo.classList.add('hidden');
             }
         }
 
-        function createOptionCard(url, label, format, iconClass) {
+        // Fungsi Render Kartu Download
+        function createOptionCard(url, label, quality, format, type) {
+            const isVideo = type === 'video';
+            const iconClass = isVideo ? 'fa-film' : 'fa-headphones';
+            const colorClass = isVideo ? 'primary-500' : 'primary-accent'; 
+            
             return `
-                <a href="${url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl bg-dark-800 border border-slate-700 hover:border-primary-500 hover:bg-dark-700 transition-colors group cursor-pointer">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-dark-900 flex items-center justify-center text-slate-400 group-hover:text-primary-400">
+                <a href="${url}" target="_blank" rel="noopener noreferrer" class="relative overflow-hidden flex flex-col p-4 rounded-2xl bg-dark-800 border border-white/5 hover:border-${colorClass}/50 hover:bg-dark-700 transition-all duration-300 group cursor-pointer shadow-sm hover:shadow-[0_0_15px_rgba(0,0,0,0.3)]">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="w-10 h-10 rounded-xl bg-dark-900 border border-white/5 flex items-center justify-center text-slate-400 group-hover:text-${colorClass} transition-colors">
                             <i class="fa-solid ${iconClass}"></i>
                         </div>
-                        <div>
-                            <p class="font-semibold text-sm text-slate-200 group-hover:text-white">${label}</p>
-                            <p class="text-xs text-slate-500">${format} • Server Cobalt</p>
-                        </div>
+                        <span class="px-2 py-1 bg-dark-900 rounded-md text-[10px] font-bold text-slate-400 group-hover:text-white transition-colors border border-white/5">
+                            ${format}
+                        </span>
                     </div>
-                    <div class="w-8 h-8 rounded-full bg-primary-600/20 text-primary-500 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all">
-                        <i class="fa-solid fa-download text-sm"></i>
+                    <div>
+                        <h5 class="font-bold text-slate-200 group-hover:text-white text-sm mb-1">${label}</h5>
+                        <p class="text-xs font-bold quality-badge">${quality}</p>
+                    </div>
+                    <div class="absolute bottom-4 right-4 w-8 h-8 rounded-full bg-${colorClass}/10 text-${colorClass} flex items-center justify-center group-hover:bg-${colorClass} group-hover:text-white transition-all transform group-hover:scale-110">
+                        <i class="fa-solid fa-arrow-down text-sm"></i>
                     </div>
                 </a>
             `;
         }
 
+        // Fitur Paste Otomatis
         pasteBtn.addEventListener('click', async () => {
             try {
                 const text = await navigator.clipboard.readText();
@@ -307,18 +388,19 @@
             }
         });
 
-        // KUNCI API KAMU (PASTE DI SINI)
-        // Dapatkan gratis di: https://rapidapi.com/auto-download-api/api/auto-download-all-in-one-big/pricing
-        const RAPIDAPI_KEY = 'a8379d2455msh0ec903647b34df3p170d31jsn5d347566caa9'; 
+        // ===============================================================
+        // KUNCI API KAMU (MASUKKAN API KEY RAPIDAPI DI BAWAH INI)
+        // ===============================================================
+        const RAPIDAPI_KEY = 'MASUKKAN_API_KEY_KAMU_DISINI'; 
 
-        // FUNGSI UTAMA MEMANGGIL RAPID API (ALL IN ONE)
+        // Fungsi Submit & Fetch Data
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const url = urlInput.value.trim();
             if (!url) return;
 
-            if (RAPIDAPI_KEY === 'MASUKKAN_API_KEY_KAMU_DISINI') {
-                errorText.textContent = "Ups! Kamu belum memasukkan API Key di dalam kode (baris 250).";
+            if (RAPIDAPI_KEY === 'a8379d2455msh0ec903647b34df3p170d31jsn5d347566caa9') {
+                errorText.innerHTML = `VibeDownloader Alert: <br/> Harap masukkan API Key RapidAPI kamu di kode (baris 321).`;
                 errorMsg.classList.remove('hidden');
                 return;
             }
@@ -328,15 +410,16 @@
             try {
                 const platformInfo = detectPlatform(url);
                 
-                // Set UI Awal
-                thumbImg.src = `https://placehold.co/600x400/1e293b/8b5cf6?text=${platformInfo.name}`;
-                platformBadge.className = `px-2.5 py-1 rounded-full border text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 ${platformInfo.color}`;
-                platformBadge.innerHTML = `<i class="fa-brands ${platformInfo.icon}"></i> ${platformInfo.name}`;
-
+                // Set UI Badge Platform
+                platformBadge.innerHTML = `<i class="fa-brands ${platformInfo.icon} ${platformInfo.color} text-base"></i> <span class="text-slate-300">${platformInfo.name}</span> ${platformInfo.verified}`;
+                
                 videoOptions.innerHTML = '';
                 audioOptions.innerHTML = '';
+                document.getElementById('videoDuration').textContent = '--:--';
+                document.getElementById('authorName').textContent = 'Mencari detail...';
+                thumbImg.src = `https://placehold.co/800x450/09090b/06b6d4?text=Mox4Graph+Processing`;
 
-                // Memanggil API All-in-One dari RapidAPI
+                // Fetch Data ke RapidAPI (All in One)
                 const response = await fetch('https://auto-download-all-in-one-big.p.rapidapi.com/v1/social/autolink', {
                     method: 'POST',
                     headers: {
@@ -347,63 +430,82 @@
                     body: JSON.stringify({ url: url })
                 });
 
-                if (!response.ok) {
-                    throw new Error(`HTTP Error! Status: ${response.status}`);
-                }
-
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
+                
                 const data = await response.json();
-                console.log("Respon dari All-in-One API:", data);
+                console.log("Mox4Graph Debugger - API Response:", data);
 
-                // Asumsi data dari API All-in-One (Sesuaikan jika di console.log bentuknya beda)
-                let videoUrl = data.video || data.medias?.[0]?.url || null;
-                let audioUrl = data.audio || null;
+                // --- Parsing Meta Data ---
+                const title = data.title || "Video Siap Diunduh";
+                const author = data.author || data.creator || data.uploader || "Mox4Graph Server";
+                const duration = data.duration ? data.duration : (data.durationString || "00:00");
+                const thumbnail = data.thumbnail || data.cover || data.image;
+
+                document.getElementById('videoTitle').textContent = title;
+                document.getElementById('authorName').textContent = author;
+                if(duration !== "00:00") document.getElementById('videoDuration').textContent = duration;
+                if (thumbnail) thumbImg.src = thumbnail;
+
+                // --- Render Opsi Multi-Kualitas Video ---
+                let hasVideo = false;
                 
-                // Update Thumbnail jika API memberikan gambar
-                if (data.thumbnail || data.cover) {
-                    thumbImg.src = data.thumbnail || data.cover;
+                if (data.medias && Array.isArray(data.medias) && data.medias.length > 0) {
+                    data.medias.forEach((media, index) => {
+                        if (media.extension === 'mp4' || media.type === 'video') {
+                            const qualityLabel = media.quality || (index === 0 ? '1080p (HD)' : '720p (SD)');
+                            videoOptions.innerHTML += createOptionCard(media.url, `Server ${index + 1}`, qualityLabel, "MP4", "video");
+                            hasVideo = true;
+                        }
+                    });
+                } else if (data.video) {
+                    videoOptions.innerHTML += createOptionCard(data.video, "Server Utama", "1080p (HQ)", "MP4", "video");
+                    hasVideo = true;
                 }
                 
-                // Update Judul
-                document.getElementById('videoTitle').textContent = data.title || "Konten Siap Diunduh!";
-                document.getElementById('authorName').innerHTML = `<i class="fa-solid fa-check-circle"></i> Berhasil diekstrak`;
-
-                // Render Tombol Video
-                if (videoUrl) {
-                    videoOptions.innerHTML = createOptionCard(videoUrl, "Unduh Video HD", "MP4", "fa-video");
-                    tabVideo.style.display = 'block';
+                if (hasVideo) {
+                    tabVideo.style.display = 'flex';
                     switchTab('video');
                 } else {
                     tabVideo.style.display = 'none';
-                    videoOptions.innerHTML = '<p class="text-sm text-slate-500 p-2">Video tidak tersedia.</p>';
+                    videoOptions.innerHTML = '<p class="text-sm text-slate-500 px-2">Format video tidak tersedia untuk link ini.</p>';
                 }
 
-                // Render Tombol Audio
+                // --- Render Opsi Audio ---
+                let hasAudio = false;
+                let audioUrl = data.audio;
+                
+                if (!audioUrl && data.medias) {
+                    const audioMedia = data.medias.find(m => m.extension === 'mp3' || m.type === 'audio');
+                    if (audioMedia) audioUrl = audioMedia.url;
+                }
+
                 if (audioUrl) {
-                    audioOptions.innerHTML = createOptionCard(audioUrl, "Unduh Audio", "MP3", "fa-music");
-                    tabAudio.style.display = 'block';
-                    if (!videoUrl) switchTab('audio');
+                    audioOptions.innerHTML += createOptionCard(audioUrl, "Audio Jernih", "320kbps", "MP3", "audio");
+                    tabAudio.style.display = 'flex';
+                    hasAudio = true;
+                    if (!hasVideo) switchTab('audio'); // Auto buka tab audio jika video tidak ada
                 } else {
                     tabAudio.style.display = 'none';
-                    audioOptions.innerHTML = '<p class="text-sm text-slate-500 p-2">Audio tidak tersedia.</p>';
+                    audioOptions.innerHTML = '<p class="text-sm text-slate-500 px-2">Format audio tidak tersedia.</p>';
                 }
 
-                if (!videoUrl && !audioUrl) {
-                    throw new Error("Tidak dapat menemukan media dari link ini.");
-                }
+                if (!hasVideo && !hasAudio) throw new Error("Link tidak menghasilkan media apa pun.");
 
+                // Tampilkan Area Hasil
                 resultArea.classList.remove('hidden');
 
             } catch (error) {
-                console.error("Error Detail:", error);
-                errorText.textContent = "Gagal mengambil data. Pastikan link valid dan API Key benar.";
+                console.error("Mox4Graph Error:", error);
+                errorText.innerHTML = "Gagal memproses data. Pastikan link valid dan API Key terisi.";
                 errorMsg.classList.remove('hidden');
             } finally {
                 setLoading(false);
             }
         });
         
+        // Animasi CSS FadeIn
         const style = document.createElement('style');
-        style.innerHTML = `@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`;
+        style.innerHTML = `@keyframes fadeIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }`;
         document.head.appendChild(style);
     </script>
 </body>
