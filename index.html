@@ -1,286 +1,407 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sugoi Downloader! 🌸</title>
-    <!-- Tailwind CSS for styling -->
+    <title>VibeDownloader | Unduh Video & Audio Mudah</title>
+    <!-- Tailwind CSS untuk styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Nunito for a playful, rounded look -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome untuk ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        'nunito': ['Nunito', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'anime-pink': '#FFB7B2',
-                        'anime-purple': '#E2C3FF',
-                        'anime-blue': '#B5EAD7',
-                        'anime-dark': '#2D3748'
+                        dark: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            700: '#334155',
+                        },
+                        primary: {
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        }
                     }
                 }
             }
         }
     </script>
     <style>
-        /* Custom CSS for some extra flair */
-        body {
-            font-family: 'Nunito', sans-serif;
-            /* A subtle anime-style pattern or gradient background */
-            background: linear-gradient(135deg, #FFB7B2 0%, #E2C3FF 50%, #B5EAD7 100%);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
-            min-height: 100vh;
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-        }
-
-        .kawaii-button {
-            transition: all 0.2s ease-in-out;
-        }
-        .kawaii-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
-        .kawaii-button:active {
-            transform: scale(0.95);
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
         
-        /* Floating animation for the header emoji */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
+        .loader {
+            border: 3px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            border-top: 3px solid #8b5cf6;
+            width: 24px;
+            height: 24px;
+            -webkit-animation: spin 1s linear infinite;
+            animation: spin 1s linear infinite;
         }
-        .floating-emoji {
-            display: inline-block;
-            animation: float 3s ease-in-out infinite;
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-4">
 
-    <div class="glass-panel rounded-3xl p-8 max-w-2xl w-full mx-auto relative overflow-hidden text-center">
+<body class="bg-dark-900 text-slate-200 font-sans min-h-screen relative overflow-x-hidden selection:bg-primary-500 selection:text-white flex flex-col">
+
+    <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-2000"></div>
+        <div class="absolute bottom-[-20%] left-[20%] w-96 h-96 bg-pink-600 rounded-full mix-blend-multiply filter blur-[128px] opacity-20 animate-blob animation-delay-4000"></div>
+    </div>
+
+    <nav class="relative z-10 w-full py-6 px-4 sm:px-6 lg:px-8 border-b border-white/5 glass">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-500 to-blue-500 flex items-center justify-center shadow-lg shadow-primary-500/20">
+                    <i class="fa-solid fa-cloud-arrow-down text-white text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400 tracking-tight">
+                    Vibe<span class="text-primary-500">Downloader</span>
+                </h1>
+            </div>
+            <div class="hidden sm:flex items-center gap-6 text-sm font-medium text-slate-400">
+                <span class="px-3 py-1 bg-green-500/10 text-green-400 rounded-full text-xs font-bold border border-green-500/20">
+                    <i class="fa-solid fa-check-circle mr-1"></i> Powered by Cobalt (Free)
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="relative z-10 flex-grow flex flex-col items-center justify-center px-4 py-12 sm:py-20 w-full max-w-4xl mx-auto">
         
-        <!-- Decorative blobs -->
-        <div class="absolute top-[-50px] left-[-50px] w-32 h-32 bg-anime-pink rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div class="absolute top-[-50px] right-[-50px] w-32 h-32 bg-anime-blue rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div class="absolute bottom-[-50px] left-20 w-32 h-32 bg-anime-purple rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+        <div class="text-center mb-10">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white mb-6 leading-tight">
+                Unduh Semua Vibe <br class="hidden sm:block" />
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-blue-400">Tanpa Ribet.</span>
+            </h2>
+            <p class="text-base sm:text-lg text-slate-400 max-w-2xl mx-auto">
+                Paste link dari YouTube, TikTok, Instagram, X (Twitter), atau Spotify. 
+                Gratis, tanpa iklan, dan tanpa perlu API Key!
+            </p>
+        </div>
 
-        <div class="relative z-10">
-            <!-- Header -->
-            <h1 class="text-4xl md:text-5xl font-extrabold text-anime-dark mb-2 drop-shadow-md">
-                Sugoi Downloader! <span class="floating-emoji">✨</span>
-            </h1>
-            <p class="text-gray-600 mb-8 font-semibold">Download video dari mana aja dengan mudah, Senpai~</p>
-
-            <!-- Input Area -->
-            <div class="flex flex-col md:flex-row gap-4 mb-8">
-                <input type="text" id="linkInput" placeholder="Paste link video di sini ya..." 
-                    class="flex-1 px-6 py-4 rounded-2xl border-2 border-anime-purple focus:outline-none focus:border-anime-pink bg-white/90 text-gray-700 shadow-inner placeholder-gray-400 transition-colors">
-                <button id="downloadBtn" onclick="handleDownloadClick()"
-                    class="kawaii-button bg-gradient-to-r from-anime-pink to-anime-purple text-white font-bold py-4 px-8 rounded-2xl shadow-lg border border-white/50">
-                    Unduh Sekarang! 🚀
-                </button>
-            </div>
-
-            <!-- Supported Platforms Indicator -->
-            <div class="flex justify-center gap-4 mb-8 text-2xl opacity-70">
-                <i class="fab fa-youtube hover:text-red-500 transition-colors"></i>
-                <i class="fab fa-tiktok hover:text-black transition-colors"></i>
-                <i class="fab fa-instagram hover:text-pink-500 transition-colors"></i>
-                <i class="fab fa-twitter hover:text-blue-400 transition-colors"></i>
-            </div>
-
-            <!-- Status Area (Loading/Error) -->
-            <div id="statusArea" class="hidden mb-6">
-                <div id="loadingIndicator" class="hidden">
-                    <p class="text-anime-dark font-bold text-lg animate-pulse">Chotto matte kudasai... (Tunggu sebentar) ⏳</p>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                        <div class="bg-anime-pink h-2.5 rounded-full" style="width: 45%; animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;"></div>
-                    </div>
-                </div>
-                <div id="errorMessage" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-md text-left">
-                    <p class="font-bold">Gomen nasai! (Maaf)</p>
-                    <p id="errorText">Terjadi kesalahan saat mengambil video.</p>
-                </div>
-            </div>
-
-            <!-- Result Area -->
-            <div id="resultArea" class="hidden bg-white/60 rounded-2xl p-6 shadow-sm border border-white mt-6">
-                <div class="flex flex-col md:flex-row gap-6 items-center md:items-start text-left">
-                    <!-- Thumbnail -->
-                    <div class="w-full md:w-1/3 flex-shrink-0">
-                        <img id="videoThumbnail" src="https://placehold.co/400x225/E2C3FF/2D3748?text=Thumbnail" alt="Video Thumbnail" class="w-full h-auto rounded-xl shadow-md border-2 border-white">
+        <div class="w-full max-w-3xl glass rounded-3xl p-6 sm:p-8 shadow-2xl border border-white/10 relative">
+            <form id="downloadForm" class="relative">
+                <div class="relative flex flex-col sm:flex-row gap-4">
+                    <div class="relative flex-grow">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="fa-solid fa-link text-slate-500"></i>
+                        </div>
+                        <input 
+                            type="url" 
+                            id="urlInput"
+                            required
+                            placeholder="Tempel link video/musik di sini..." 
+                            class="w-full bg-dark-900/50 border border-slate-700 text-white text-base rounded-2xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 block pl-11 p-4 transition-all placeholder-slate-500 outline-none hover:border-slate-600"
+                        >
+                        <button type="button" id="pasteBtn" class="absolute inset-y-0 right-2 my-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-sm font-medium transition-colors border border-slate-700 hidden sm:flex items-center gap-2">
+                            <i class="fa-regular fa-clipboard"></i> Paste
+                        </button>
                     </div>
                     
-                    <!-- Video Info & Download Options -->
-                    <div class="w-full md:w-2/3 flex flex-col justify-between h-full">
-                        <div>
-                            <h3 id="videoTitle" class="text-xl font-bold text-anime-dark mb-2 line-clamp-2">Judul Video Akan Muncul Di Sini</h3>
-                            <p id="videoAuthor" class="text-sm text-gray-500 mb-4">By: @username</p>
+                    <button 
+                        type="submit" 
+                        id="fetchBtn"
+                        class="bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-2xl px-8 py-4 transition-all shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2 min-w-[140px] active:scale-95"
+                    >
+                        <span id="btnText">Proses</span>
+                        <i id="btnIcon" class="fa-solid fa-bolt"></i>
+                        <div id="btnLoader" class="loader hidden"></div>
+                    </button>
+                </div>
+                
+                <div id="errorMessage" class="hidden mt-4 text-red-400 text-sm flex items-center gap-2 bg-red-500/10 p-3 rounded-xl border border-red-500/20">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="errorText">Ups, link tidak valid atau tidak didukung.</span>
+                </div>
+            </form>
+
+            <div id="resultArea" class="hidden mt-8 pt-8 border-t border-slate-700/50 animate-[fadeIn_0.5s_ease-out]">
+                
+                <div class="flex flex-col md:flex-row gap-6 mb-8">
+                    <div class="w-full md:w-1/3 aspect-video bg-dark-900 rounded-2xl overflow-hidden relative border border-slate-700/50 flex-shrink-0 group">
+                        <img id="thumbImg" src="" alt="Thumbnail" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark-900/80 to-transparent"></div>
+                    </div>
+                    
+                    <div class="flex flex-col justify-center flex-grow">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span id="platformBadge" class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1.5"></span>
                         </div>
-                        
-                        <div id="downloadOptions" class="flex flex-col gap-3 mt-4">
-                            <!-- Buttons will be generated here by JS -->
-                            <button class="kawaii-button bg-anime-blue text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-opacity-80 flex items-center justify-center gap-2">
-                                <span>MP4 (720p)</span>
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                            </button>
-                            <button class="kawaii-button bg-gray-200 text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-gray-300 flex items-center justify-center gap-2">
-                                <span>Audio (MP3)</span>
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
-                            </button>
-                        </div>
+                        <h3 id="videoTitle" class="text-xl sm:text-2xl font-bold text-white mb-2 line-clamp-2">
+                            Konten Siap Diunduh!
+                        </h3>
+                        <p id="authorName" class="text-sm text-green-400 flex items-center gap-2">
+                            <i class="fa-solid fa-check-circle"></i> Berhasil diekstrak dari server Cobalt
+                        </p>
+                    </div>
+                </div>
+
+                <div class="bg-dark-900/40 rounded-2xl p-2 border border-slate-700/50">
+                    <div class="flex p-1 bg-dark-800 rounded-xl mb-4">
+                        <button id="tabVideo" class="flex-1 py-2 text-sm font-semibold rounded-lg bg-primary-600 text-white shadow-sm transition-all" onclick="switchTab('video')">
+                            <i class="fa-solid fa-video mr-2"></i> Video (MP4)
+                        </button>
+                        <button id="tabAudio" class="flex-1 py-2 text-sm font-semibold rounded-lg text-slate-400 hover:text-white transition-all" onclick="switchTab('audio')">
+                            <i class="fa-solid fa-music mr-2"></i> Audio (MP3)
+                        </button>
+                    </div>
+
+                    <div id="panelVideo" class="space-y-3">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider px-2 mb-2">Pilihan Video</h4>
+                        <div id="videoOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                    </div>
+
+                    <div id="panelAudio" class="hidden space-y-3">
+                        <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider px-2 mb-2">Pilihan Audio</h4>
+                        <div id="audioOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        
+        <div id="supported" class="mt-16 text-center">
+            <p class="text-sm font-medium text-slate-500 mb-6 uppercase tracking-widest">Mendukung Platform Populer</p>
+            <div class="flex flex-wrap justify-center gap-6 sm:gap-8 opacity-70">
+                <i class="fa-brands fa-youtube text-3xl sm:text-4xl hover:text-red-500 hover:opacity-100 transition-all"></i>
+                <i class="fa-brands fa-tiktok text-3xl sm:text-4xl hover:text-white hover:opacity-100 transition-all"></i>
+                <i class="fa-brands fa-instagram text-3xl sm:text-4xl hover:text-pink-500 hover:opacity-100 transition-all"></i>
+                <i class="fa-brands fa-x-twitter text-3xl sm:text-4xl hover:text-white hover:opacity-100 transition-all"></i>
+                <i class="fa-brands fa-spotify text-3xl sm:text-4xl hover:text-green-500 hover:opacity-100 transition-all"></i>
+            </div>
+        </div>
 
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    </main>
+
+    <footer class="relative z-10 py-8 border-t border-white/5 bg-dark-900/80 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 VibeDownloader. Menggunakan API Open-Source Cobalt.</p>
+        </div>
+    </footer>
 
     <script>
-            // 3. Panggil API
-            // Tampilkan Loading
-            showLoading();
+        const form = document.getElementById('downloadForm');
+        const urlInput = document.getElementById('urlInput');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const fetchBtn = document.getElementById('fetchBtn');
+        const btnText = document.getElementById('btnText');
+        const btnIcon = document.getElementById('btnIcon');
+        const btnLoader = document.getElementById('btnLoader');
+        const errorMsg = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        
+        const resultArea = document.getElementById('resultArea');
+        const thumbImg = document.getElementById('thumbImg');
+        const platformBadge = document.getElementById('platformBadge');
+        
+        const tabVideo = document.getElementById('tabVideo');
+        const tabAudio = document.getElementById('tabAudio');
+        const panelVideo = document.getElementById('panelVideo');
+        const panelAudio = document.getElementById('panelAudio');
+        const videoOptions = document.getElementById('videoOptions');
+        const audioOptions = document.getElementById('audioOptions');
 
-            try {
-                // =====================================================================
-                // CARA AGAR 100% WORK DI DUNIA NYATA:
-                // 1. Daftar di rapidapi.com (cari "All in One Social Media Downloader")
-                // 2. Dapatkan API Key
-                // 3. Hapus/Comment kode SIMULASI di bawah, lalu Un-comment kode FETCH ini:
-                // =====================================================================
-                
-                /*
-                const apiUrl = `https://contoh-api-downloader.p.rapidapi.com/download?url=${encodeURIComponent(link)}`;
-                const response = await fetch(apiUrl, {
-                    method: 'GET',
-                    headers: {
-                        'x-rapidapi-key': 'MASUKKAN_API_KEY_KAMU_DISINI',
-                        'x-rapidapi-host': 'contoh-api-downloader.p.rapidapi.com'
-                    }
-                });
-                const data = await response.json();
-                
-                // Lalu panggil fungsi displayResults(data) menyesuaikan format dari API tersebut
-                */
+        function detectPlatform(url) {
+            url = url.toLowerCase();
+            if (url.includes('youtube.com') || url.includes('youtu.be')) return { name: 'YouTube', icon: 'fa-youtube', color: 'bg-red-500/20 text-red-400 border-red-500/30' };
+            if (url.includes('tiktok.com')) return { name: 'TikTok', icon: 'fa-tiktok', color: 'bg-slate-700/50 text-white border-slate-600' };
+            if (url.includes('spotify.com')) return { name: 'Spotify', icon: 'fa-spotify', color: 'bg-green-500/20 text-green-400 border-green-500/30' };
+            if (url.includes('instagram.com')) return { name: 'Instagram', icon: 'fa-instagram', color: 'bg-pink-500/20 text-pink-400 border-pink-500/30' };
+            if (url.includes('twitter.com') || url.includes('x.com')) return { name: 'X (Twitter)', icon: 'fa-x-twitter', color: 'bg-slate-700/50 text-white border-slate-600' };
+            return { name: 'Universal', icon: 'fa-globe', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' };
+        }
 
-                // --- SIMULASI RESPONS DARI API (UNTUK CEK UI/UX) ---
-                // Simulasi delay jaringan selama 2 detik
-                await new Promise(resolve => setTimeout(resolve, 2000));
-                
-                const mockApiResponse = {
-                    success: true,
-                    title: "Opening Anime Terbaik - Musim Semi 2024",
-                    author: "@AnimeFansClub",
-                    thumbnailUrl: "https://placehold.co/400x225/E2C3FF/2D3748?text=Anime+OP",
-                    downloads: [
-                        { type: "Video", quality: "1080p", format: "mp4", url: "#" },
-                        { type: "Video", quality: "720p", format: "mp4", url: "#" },
-                        { type: "Audio", quality: "128kbps", format: "mp3", url: "#" }
-                    ]
-                };
-
-                // Jika simulasi gagal
-                // throw new Error("Gagal mengambil data dari server"); 
-
-                // 4. Tampilkan Hasil
-                displayResults(mockApiResponse);
-
-            } catch (error) {
-                showError("Ups! " + error.message);
+        function setLoading(isLoading) {
+            if (isLoading) {
+                fetchBtn.disabled = true;
+                btnText.textContent = "Mengekstrak...";
+                btnIcon.classList.add('hidden');
+                btnLoader.classList.remove('hidden');
+                errorMsg.classList.add('hidden');
+                resultArea.classList.add('hidden');
+            } else {
+                fetchBtn.disabled = false;
+                btnText.textContent = "Proses";
+                btnIcon.classList.remove('hidden');
+                btnLoader.classList.add('hidden');
             }
         }
 
-        // --- FUNGSI-FUNGSI HELPER UTILITY ---
+        window.switchTab = function(type) {
+            if (type === 'video') {
+                tabVideo.classList.replace('bg-transparent', 'bg-primary-600');
+                tabVideo.classList.replace('text-slate-400', 'text-white');
+                tabAudio.classList.replace('bg-primary-600', 'bg-transparent');
+                tabAudio.classList.replace('text-white', 'text-slate-400');
+                panelVideo.classList.remove('hidden');
+                panelAudio.classList.add('hidden');
+            } else {
+                tabAudio.classList.replace('bg-transparent', 'bg-primary-600');
+                tabAudio.classList.replace('text-slate-400', 'text-white');
+                tabVideo.classList.replace('bg-primary-600', 'bg-transparent');
+                tabVideo.classList.replace('text-white', 'text-slate-400');
+                panelAudio.classList.remove('hidden');
+                panelVideo.classList.add('hidden');
+            }
+        }
 
-        // Memeriksa apakah text adalah URL yang valid
-        function isValidUrl(string) {
+        function createOptionCard(url, label, format, iconClass) {
+            return `
+                <a href="${url}" target="_blank" rel="noopener noreferrer" class="flex items-center justify-between p-3 rounded-xl bg-dark-800 border border-slate-700 hover:border-primary-500 hover:bg-dark-700 transition-colors group cursor-pointer">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-lg bg-dark-900 flex items-center justify-center text-slate-400 group-hover:text-primary-400">
+                            <i class="fa-solid ${iconClass}"></i>
+                        </div>
+                        <div>
+                            <p class="font-semibold text-sm text-slate-200 group-hover:text-white">${label}</p>
+                            <p class="text-xs text-slate-500">${format} • Server Cobalt</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-primary-600/20 text-primary-500 flex items-center justify-center group-hover:bg-primary-600 group-hover:text-white transition-all">
+                        <i class="fa-solid fa-download text-sm"></i>
+                    </div>
+                </a>
+            `;
+        }
+
+        pasteBtn.addEventListener('click', async () => {
             try {
-                new URL(string);
-                return true;
+                const text = await navigator.clipboard.readText();
+                urlInput.value = text;
+                urlInput.focus();
             } catch (err) {
-                return false;
+                console.error('Failed to read clipboard', err);
             }
-        }
+        });
 
-        // Menampilkan UI Loading
-        function showLoading() {
-            document.getElementById('statusArea').classList.remove('hidden');
-            document.getElementById('loadingIndicator').classList.remove('hidden');
-            document.getElementById('errorMessage').classList.add('hidden');
-            document.getElementById('resultArea').classList.add('hidden');
-        }
+        // FUNGSI UTAMA MEMANGGIL COBALT API
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = urlInput.value.trim();
+            if (!url) return;
 
-        // Menampilkan Pesan Error
-        function showError(message) {
-            document.getElementById('statusArea').classList.remove('hidden');
-            document.getElementById('loadingIndicator').classList.add('hidden');
-            const errorContainer = document.getElementById('errorMessage');
-            errorContainer.classList.remove('hidden');
-            document.getElementById('errorText').innerText = message;
-            document.getElementById('resultArea').classList.add('hidden');
-        }
+            setLoading(true);
 
-        // Menampilkan Data Hasil ke UI
-        function displayResults(data) {
-            // Sembunyikan loading
-            document.getElementById('statusArea').classList.add('hidden');
-            
-            // Tampilkan area hasil
-            const resultArea = document.getElementById('resultArea');
-            resultArea.classList.remove('hidden');
-
-            // Set data teks dan gambar
-            document.getElementById('videoTitle').innerText = data.title;
-            document.getElementById('videoAuthor').innerText = data.author;
-            document.getElementById('videoThumbnail').src = data.thumbnailUrl;
-
-            // Buat tombol download dinamis berdasarkan data
-            const downloadOptionsContainer = document.getElementById('downloadOptions');
-            downloadOptionsContainer.innerHTML = ''; // Kosongkan tombol lama
-
-            data.downloads.forEach(dl => {
-                const btn = document.createElement('button');
+            try {
+                const platformInfo = detectPlatform(url);
                 
-                // Styling berbeda untuk Video vs Audio
-                if(dl.type === "Video") {
-                    btn.className = "kawaii-button bg-anime-blue text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-opacity-80 flex items-center justify-center gap-2";
-                } else {
-                    btn.className = "kawaii-button bg-gray-200 text-anime-dark font-bold py-2 px-4 rounded-xl border border-white hover:bg-gray-300 flex items-center justify-center gap-2";
+                // Set UI Awal
+                thumbImg.src = `https://placehold.co/600x400/1e293b/8b5cf6?text=${platformInfo.name}`;
+                platformBadge.className = `px-2.5 py-1 rounded-full border text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 ${platformInfo.color}`;
+                platformBadge.innerHTML = `<i class="fa-brands ${platformInfo.icon}"></i> ${platformInfo.name}`;
+
+                videoOptions.innerHTML = '';
+                audioOptions.innerHTML = '';
+
+                const COBALT_API = 'https://api.cobalt.tools/api/json';
+
+                // 1. Request Video (MP4)
+                const reqVideo = fetch(COBALT_API, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url, vCodec: "h264" }) // Request format standar video
+                });
+
+                // 2. Request Audio (MP3)
+                const reqAudio = fetch(COBALT_API, {
+                    method: 'POST',
+                    headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: url, isAudioOnly: true }) // Request khusus audio
+                });
+
+                // Tunggu kedua request selesai bersamaan (biar cepat!)
+                const [resVideo, resAudio] = await Promise.all([reqVideo, reqAudio]);
+                
+                const dataVideo = await resVideo.json();
+                const dataAudio = await resAudio.json();
+
+                console.log("Cobalt Video:", dataVideo);
+                console.log("Cobalt Audio:", dataAudio);
+
+                // Cek hasil Video
+                let hasVideo = false;
+                if (dataVideo.status === 'stream' || dataVideo.status === 'redirect') {
+                    videoOptions.innerHTML = createOptionCard(dataVideo.url, "Unduh Video Kualitas Tinggi", "MP4", "fa-video");
+                    hasVideo = true;
+                } else if (dataVideo.status === 'error') {
+                    throw new Error(dataVideo.text || "Gagal mengambil video.");
                 }
 
-                // Ikon SVG sederhana (Panah Bawah)
-                const iconSvg = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>`;
+                // Cek hasil Audio
+                let hasAudio = false;
+                if (dataAudio.status === 'stream' || dataAudio.status === 'redirect') {
+                    audioOptions.innerHTML = createOptionCard(dataAudio.url, "Unduh Audio Saja", "MP3", "fa-music");
+                    hasAudio = true;
+                }
 
-                btn.innerHTML = `<span>${dl.type} (${dl.quality} - ${dl.format.toUpperCase()})</span> ${iconSvg}`;
-                
-                // Event saat tombol download spesifik diklik
-                btn.onclick = () => {
-                    // Dalam implementasi nyata, ini akan redirect ke URL download atau men-trigger download
-                    alert(`Simulasi: Memulai download ${dl.format} kualitas ${dl.quality}... Yay! 🎉`);
-                };
+                // Tampilkan Tab yang sesuai
+                if (hasVideo) {
+                    tabVideo.style.display = 'block';
+                    switchTab('video');
+                } else {
+                    tabVideo.style.display = 'none';
+                    videoOptions.innerHTML = '<p class="text-sm text-slate-500 p-2">Video tidak tersedia.</p>';
+                }
 
-                downloadOptionsContainer.appendChild(btn);
-            });
-        }
+                if (hasAudio) {
+                    tabAudio.style.display = 'block';
+                    if (!hasVideo) switchTab('audio'); // Kalau cuma ada audio (misal spotify), langsung buka tab audio
+                } else {
+                    tabAudio.style.display = 'none';
+                    audioOptions.innerHTML = '<p class="text-sm text-slate-500 p-2">Audio tidak tersedia.</p>';
+                }
+
+                if (!hasVideo && !hasAudio) {
+                    throw new Error("Tidak dapat menemukan media dari link ini.");
+                }
+
+                resultArea.classList.remove('hidden');
+
+            } catch (error) {
+                console.error("Error:", error);
+                errorText.textContent = error.message || "Gagal mengekstrak link. Pastikan link publik (tidak di-private).";
+                errorMsg.classList.remove('hidden');
+            } finally {
+                setLoading(false);
+            }
+        });
+        
+        const style = document.createElement('style');
+        style.innerHTML = `@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }`;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
